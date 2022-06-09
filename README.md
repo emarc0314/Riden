@@ -1,5 +1,3 @@
-Original App Design Project!
-===
 
 # Riden
 
@@ -11,7 +9,7 @@ Original App Design Project!
 
 ## Overview
 ### Description
-This app will be a transportation app designed to help college students get from one place to another. It will provide a user a list or ride options from students from their area and school, and allow them to place themselves as a ride otpion as well.
+A transportation app designed to help college students get from one place to another. It will provide a user a list or ride options from students from their area and school, and allow them to place themselves as a ride otpion as well.
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
@@ -34,8 +32,9 @@ This app will be a transportation app designed to help college students get from
 **Required Must-have Stories**
 
 * Marcus Aurelius is trying to get back home to New Jersey for the summer, but can't seem to find a ride and does't want to say another day! He opens Rideshare and sees that a friend of a friend is traveling THAT NIGHT and has an extra seat available, so he requests to join and gets home to his family :^)
-* Socrates is driving back to Philadelphia for winter break, but realzies that the drive is 3+ hours long and would really like company for the ride. He decides to put himself on the app, and hears back within seconds that someone would like to join his ride! It's a friend of his close friend Plato, so they will have something to talk about. 
-
+* Socrates is driving back to Philadelphia for winter break, but realzies that the drive is 3+ hours long and would really like company for the ride. He decides to put himself on the app, and hears back within seconds that someone would like to join his ride! It's a friend of his close friend Plato, so they will have something to talk about.
+* Every user wil initially have to login in order to access data about rides they are being offered.
+ 
 **Optional Nice-to-have Stories**
 
 * Plato would love to put himself on the app, but he doesn't like that there doesn't seem to be any structured compensation for giving a ride. However, a new update of the app recently came out that allows for ridees to ask the riders to venmo them some certain amount, and once that amout is reached they could authenticate the ride. 
@@ -58,7 +57,7 @@ This app will be a transportation app designed to help college students get from
 
 * Ride Listing View (o--)
 * Ride Posting View (-o-)
-* Profile View (--o)
+* Profile View (--o)o
 
 **Flow Navigation** (Screen to Screen)
 
