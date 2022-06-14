@@ -72,7 +72,7 @@ A transportation app designed to help college students get from one place to ano
 ## Wireframes
 <img width="905" alt="Screen Shot 2022-06-14 at 11 31 21 AM" src="https://user-images.githubusercontent.com/75585259/173663281-6eb43f2c-5f85-416c-823f-fd1c77d2a4b5.png">
 <img width="913" alt="Screen Shot 2022-06-14 at 11 31 32 AM" src="https://user-images.githubusercontent.com/75585259/173663322-7de2eac4-bee2-4270-962c-e81b36f6dd32.png">
-<img width="904" alt="Screen Shot 2022-06-14 at 11 31 58 AM" src="https://user-images.githubusercontent.com/75585259/173663335-b86157a5-d08c-46d9-9181-99d361b11fe4.png">
+<img width="913" alt="Screen Shot 2022-06-14 at 11 32 05 AM" src="https://user-images.githubusercontent.com/75585259/173697371-c7763c41-7280-4c5a-9044-63a666feb142.png">
 
 
 
