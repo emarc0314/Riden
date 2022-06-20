@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.riden;
 
 import org.junit.Test;
 
