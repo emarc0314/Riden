@@ -5,10 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MyRidesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMyRides"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="my rides fragment" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>

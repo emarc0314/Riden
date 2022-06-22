@@ -2,17 +2,22 @@ package com.example.riden;
 
 import android.app.Application;
 
+import com.example.riden.models.Ride;
+import com.example.riden.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
 public class ParseApplication extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();
+        ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(Ride.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("eH5J7FhF6w6yIwFkuRgLs6r3IAUIKktKOk6qOOeK")
-                .clientKey("hAqK5klMLOr43tAbY3AWWh0gw8r3DAI0wF1F9xjL")
+                .applicationId("rNdnyJfDAU5iFJFmxM64xxJOoaY9VPZD4NInF0ie")
+                .clientKey("TgP0awMuSwi0PKUdmW2YizIM2ZZXAoJE6x1KJYjF")
                 .server("https://parseapi.back4app.com")
                 .build()
         );
