@@ -76,7 +76,38 @@ A transportation app designed to help college students get from one place to ano
 
 
 
+
 ### [BONUS] Digital Wireframes & Mockups
+
+### [BONUS] Interactive Prototype
+
+**User**
+| Property | Type | Description |
+| :---         |     :----      |          :--- |
+| profileImage  | File     | Profile Image  |
+| carImage  |   File   | Picture of car of driver  |
+| ridesGiven     |   Number   | Number of rides a person has given |
+
+
+**Ride**
+| Property | Type | Description |
+| :---         |     :----      | :--- |
+| carImage    |   File   | Picture of car of driver  |
+| navigationProperties | Pointer to tripLocation | Picture of car of driver |
+| ridesGiven  |   Number   | Number of rides a person has given |
+| driver |   Pointer to User  | the driver of the car |
+| numberSeats |   Number  | number of seats avaiable |
+|tripDate | String | date of the trip in "January, 2nd" format|
+
+
+Google Maps API important here??
+**tripLocation**
+| Property | Type | Description |
+| :---         |     :----      |          :--- |
+| pickupLocationName |   String  | Name of pickup location |
+| destinationName | String | Name of destination |
+| tripLength  |   Number | Length of trip in minutes |
+
 
 ### [BONUS] Interactive Prototype
 

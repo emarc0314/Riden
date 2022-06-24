@@ -60,11 +60,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserInfo() {
+
         tvUsername.setText(user.getUsername());
         tvFullName.setText(user.getFullName());
 
         ParseFile profileImage = user.getProfileImage();
         ParseFile carImage = user.getCarImage();
+
         if(profileImage != null) {
             Glide.with(getContext()).load(profileImage.getUrl()).circleCrop().into(ibProfileImage);
         }
