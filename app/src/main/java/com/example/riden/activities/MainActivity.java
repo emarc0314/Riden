@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        ParseUser.getCurrentUser().logOut();
 
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);

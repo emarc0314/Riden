@@ -28,7 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="car" />
+                            <entry key="color" value="add440" />
+                            <entry key="outputName" value="car_reserve" />
                           </map>
                         </option>
                       </PersistentState>
