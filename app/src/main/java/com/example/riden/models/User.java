@@ -3,15 +3,8 @@ package com.example.riden.models;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @ParseClassName("_User")
@@ -45,6 +38,11 @@ public class User extends ParseUser {
     }
 
     public ParseFile getProfileImage() {
+        try {
+            fetchIfNeeded().getParseFile(PROFILEPHOTO_KEY);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return getParseFile(PROFILEPHOTO_KEY);
     }
 

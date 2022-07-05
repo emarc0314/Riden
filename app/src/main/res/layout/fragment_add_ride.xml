@@ -25,7 +25,7 @@
         android:id="@+id/etPickupLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Pickup Location"
         android:inputType="textPersonName"
@@ -40,12 +40,24 @@
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
         android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/ibCalendar"
         app:layout_constraintEnd_toEndOf="@+id/etDestination"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ibCalendar"
         app:layout_constraintTop_toTopOf="@+id/ibCalendar" />
+
+    <TextView
+        android:id="@+id/tvDepartureTime"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="28dp"
+        android:text="Departure Time"
+        app:layout_constraintBottom_toBottomOf="@+id/ibClock"
+        app:layout_constraintEnd_toEndOf="@+id/etDestination"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ibCalendar"
+        app:layout_constraintTop_toTopOf="@+id/ibClock" />
 
     <ImageButton
         android:id="@+id/ibCalendar"
@@ -57,16 +69,52 @@
         app:layout_constraintStart_toStartOf="@+id/etDestination"
         app:layout_constraintTop_toBottomOf="@+id/etDestination" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
+    <ImageButton
+        android:id="@+id/ibClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:contentDescription="idk brah"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        app:layout_constraintStart_toStartOf="@+id/etDestination"
+        app:layout_constraintTop_toBottomOf="@+id/etNumberSeats" />
+
+    <EditText
+        android:id="@+id/etNumberSeats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Number of seats"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ibCalendar" />
+
+    <Button
+        android:id="@+id/btAddRide"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="ADD RIDE"
+        app:layout_constraintEnd_toEndOf="@+id/etNumberSeats"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/etNumberSeats"
+        app:layout_constraintTop_toBottomOf="@+id/ibUploadCarImage" />
+
+    <ImageButton
+        android:id="@+id/ibUploadCarImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="80dp"
+        android:contentDescription="uploaded car image"
+        android:src="@android:drawable/ic_menu_upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNumberSeats"
+        tools:src="@android:drawable/ic_menu_upload_you_tube" />
 </androidx.constraintlayout.widget.ConstraintLayout>
