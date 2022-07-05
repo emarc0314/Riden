@@ -17,7 +17,6 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
     public static final String TAG = "LoginActivity";
-    private EditText etPhoneNumber;
     private EditText etPassword;
     private EditText etUsername;
     private Button btNext;
@@ -28,10 +27,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         etUsername = findViewById(R.id.etUsername);
-//        etPhoneNumber = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btNext = findViewById(R.id.btNext);
-//
+
         if(ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }

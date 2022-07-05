@@ -15,8 +15,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8c7c6d2e-c721-4962-9612-7c2577726291" name="Changes" comment="">
+<<<<<<< HEAD
+=======
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.3.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.3.3/executionHistory/executionHistory.lock" afterDir="false" />
+>>>>>>> main
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,9 +38,9 @@
       <list>
         <option value="Kotlin Class" />
         <option value="resourceFile" />
+        <option value="valueResourceFile" />
         <option value="layoutResourceFile" />
         <option value="Class" />
-        <option value="valueResourceFile" />
       </list>
     </option>
   </component>
@@ -169,26 +172,37 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/RideAdapter.java</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/ProfileFragment.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/ProfileFragment.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/ProfileFragment.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/MyRidesAdapter.java</url>
           <line>65</line>
-          <option name="timeStamp" value="18" />
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/RideAdapter.java</url>
-          <line>31</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/ProfileFragment.java</url>
-          <line>63</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/ProfileFragment.java</url>
-          <line>64</line>
-          <option name="timeStamp" value="22" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/MyRidesAdapter.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.example.riden.models.Ride" memberName="shadow$_monitor_" />
+        <PinnedItemInfo parentTag="com.example.riden.models.Ride" memberName="localId" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

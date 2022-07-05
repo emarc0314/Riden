@@ -38,9 +38,9 @@ public class AddRideFragment extends Fragment {
     private EditText etPickupLocation;
     private EditText etDestination;
     private ImageButton ibCalendar;
-//    private DatePickerDialog ibCalendar;
     private TextView tvCalendarInput;
     private DatePickerDialog datePickerDialog;
+
     public AddRideFragment() {
         // Required empty public constructor
     }
@@ -64,7 +64,6 @@ public class AddRideFragment extends Fragment {
 
         Places.initialize(view.getContext(), getString(R.string.google_maps_api_key));
         etDestination.setFocusable(false);
-
         etDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +89,6 @@ public class AddRideFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
-
                 String date = makeDateString(dayOfMonth, month, year);
                 tvCalendarInput.setText(date);
             }
@@ -100,7 +98,6 @@ public class AddRideFragment extends Fragment {
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
-
         int style = AlertDialog.THEME_HOLO_LIGHT;
         datePickerDialog = new DatePickerDialog(getContext(), style, dateSetListener, year, month, day);
     }
@@ -141,12 +138,8 @@ public class AddRideFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 100 && resultCode == RESULT_OK) {
-            //when success
-            //initialize place
             Place place = Autocomplete.getPlaceFromIntent(data);
             etDestination.setText(place.getAddress());
-            //Set locality name
-            Log.i(TAG, place.getAddress());
         }
         else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);

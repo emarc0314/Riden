@@ -19,7 +19,6 @@ import com.example.riden.models.Ride;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,6 @@ public class RidesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         rvRides = view.findViewById(R.id.rvRides);
         rides = new ArrayList<>();
         adapter = new RideAdapter(getContext(), rides);
@@ -54,9 +52,7 @@ public class RidesFragment extends Fragment {
     private void queryRides() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
-//        query.include(Ride.DRIVER_KEY);
         query.setLimit(20);
-//        query.addDescendingOrder()/]
         query.addAscendingOrder("numberSeats");
         query.findInBackground(new FindCallback<Ride>() {
             @Override

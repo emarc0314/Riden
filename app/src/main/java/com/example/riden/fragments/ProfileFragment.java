@@ -60,7 +60,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserInfo() {
-
         tvUsername.setText(user.getUsername());
         tvFullName.setText(user.getFullName());
 
@@ -73,7 +72,6 @@ public class ProfileFragment extends Fragment {
         if(carImage != null) {
             Glide.with(getContext()).load(carImage.getUrl()).into(ivCarImage);
         }
-
     }
 
     @Override
@@ -81,7 +79,5 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
-
-
     }
 }
