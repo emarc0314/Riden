@@ -25,5 +25,5 @@ jobs:
     - name: Build with Gradle
       env:
         parse_application_id: ${{ secrets.PARSE_APPLICATION_ID}}
-        
+
       run: ./gradlew build
