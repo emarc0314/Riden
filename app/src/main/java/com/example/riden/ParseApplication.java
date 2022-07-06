@@ -15,8 +15,20 @@ public class ParseApplication extends Application {
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Ride.class);
 
+        String parseAppId;
+        if(System.getenv("PARSE_APPLICATION_ID") != null) {
+            parseAppId = System.getenv("PARSE_APPLICATION_ID");
+        }
+        else {
+            parseAppId = getString(R.string.parse_application_id);
+//            parseAppId = "fakle id";
+        }
+//        return property ?: environmentVariable(name)
+
+//        fun environmentVariable(name: String) = System.getenv(name) ?: ""
+
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId((getString(R.string.parse_application_id)))
+                .applicationId((parseAppId))
                 .clientKey("TgP0awMuSwi0PKUdmW2YizIM2ZZXAoJE6x1KJYjF")
                 .server("https://parseapi.back4app.com")
                 .build()
