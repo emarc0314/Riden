@@ -24,5 +24,5 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       env:
-        parse_application_id: ${{ secrets.PARSE_APPLICATION_ID}}
+        PARSE_APPLICATION_ID: ${{ secrets.PARSE_APPLICATION_ID}}
       run: ./gradlew build
