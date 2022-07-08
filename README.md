@@ -1,6 +1,8 @@
 
 # Riden
 
+[![Android CI](https://github.com/emarc0314/Riden/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/emarc0314/Riden/actions/workflows/android.yml)
+
 ## Table of Contents
 1. [Overview](#Overview)
 1. [Product Spec](#Product-Spec)
