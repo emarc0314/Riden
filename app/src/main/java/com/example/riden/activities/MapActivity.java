@@ -21,13 +21,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private long UPDATE_INTERVAL_SECS = 60000;  /* 60 secs */
+    private long FASTEST_INTERVAL_SECS = 5000; /* 5 secs */
+    private String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
     MapView mMapView;
     Location mCurrentLocation;
-    private String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
