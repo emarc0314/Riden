@@ -1,4 +1,4 @@
-package com.example.riden.activities.directionhelpers;
+package com.example.riden.activities.helpers;
 
 /**
  * Created by Vishal on 10/20/2018.

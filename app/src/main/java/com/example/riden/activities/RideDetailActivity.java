@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
-import com.example.riden.activities.directionhelpers.TaskLoadedCallback;
+import com.example.riden.activities.helpers.TaskLoadedCallback;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.google.android.gms.maps.CameraUpdate;
@@ -20,10 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.example.riden.activities.directionhelpers.FetchURL;
+import com.example.riden.activities.helpers.FetchURL;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.sql.Driver;
 import java.util.ArrayList;
 //import com.thecodecity;
 
