@@ -1,6 +1,7 @@
 package com.example.riden.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
+import com.example.riden.activities.RideDetailActivity;
 import com.example.riden.models.Ride;
 import com.parse.ParseFile;
 
@@ -50,7 +52,7 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHold
         return rides.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDestination = itemView.findViewById(R.id.tvDestination);
@@ -59,16 +61,29 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHold
             tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
             ibCarImage = itemView.findViewById(R.id.ibCarImage);
             ibReserve = itemView.findViewById(R.id.ibReserve);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Ride ride) {
             tvSeats.setText(String.valueOf(ride.getSeats()));
-
-
+            tvDestination.setText(ride.getCityDestination() + ", " + ride.getStateDestination());
 
             ParseFile carImage = ride.getCarImage();
             if (carImage != null) {
                 Glide.with(context).load(carImage.getUrl()).into(ibCarImage);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Ride ride = rides.get(position);
+                Intent intent = new Intent(context, RideDetailActivity.class);
+
+                intent.putExtra(Ride.class.getSimpleName(), ride);
+                intent.putExtra("isMyRidesView", true);
+                context.startActivity(intent);
             }
         }
     }

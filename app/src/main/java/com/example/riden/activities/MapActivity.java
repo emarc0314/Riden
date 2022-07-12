@@ -21,17 +21,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private GoogleMap mMap;
-    private SupportMapFragment mapFragment;
-    MapView mapView;
-    Location mCurrentLocation;
+
+    private long UPDATE_INTERVAL_SECS = 60000;  /* 60 secs */
+    private long FASTEST_INTERVAL_SECS = 5000; /* 5 secs */
     private String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
+
+    private GoogleMap mMap;
+    private SupportMapFragment mMapFragment;
+    MapView mMapView;
+    Location mCurrentLocation;
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mapView.onResume();
+        mMapView.onResume();
 
         mMap = googleMap;
 
@@ -55,7 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mapViewBundle = new Bundle();
             outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
         }
-        mapView.onSaveInstanceState(mapViewBundle);
+        mMapView.onSaveInstanceState(mapViewBundle);
     }
 
 
@@ -75,9 +77,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
-        mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1));
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
+        mMapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1));
+        if (mMapFragment != null) {
+            mMapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap map) {
                     map.setMapType(GoogleMap.MAP_TYPE_NORMAL);

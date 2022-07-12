@@ -1,4 +1,4 @@
-package com.example.riden.activities.directionhelpers;
+package com.example.riden.activities.helpers;
 
 import com.google.android.gms.maps.model.LatLng;
 

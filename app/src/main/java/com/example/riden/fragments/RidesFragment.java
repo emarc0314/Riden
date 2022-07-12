@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.riden.Adapters.RideAdapter;
 import com.example.riden.R;
@@ -26,7 +28,9 @@ import java.util.List;
 public class RidesFragment extends Fragment {
     private RecyclerView rvRides;
     protected List<Ride> rides;
+    protected List<Ride> allRides;
     protected RideAdapter adapter;
+    private SearchView searchView;
     public static final String TAG = "RidesFragment";
 
     public RidesFragment() {
@@ -42,7 +46,22 @@ public class RidesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvRides = view.findViewById(R.id.rvRides);
         rides = new ArrayList<>();
-        adapter = new RideAdapter(getContext(), rides);
+        allRides = new ArrayList<>();
+        adapter = new RideAdapter(getContext(), rides, allRides);
+        searchView = view.findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         rvRides.setAdapter(adapter);
         rvRides.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,8 +84,17 @@ public class RidesFragment extends Fragment {
                 for (Ride ride : rides) {
                     Log.i(TAG, "ride " + ride.getDriver());
                 }
+                for(Ride ride: theseRides) {
+                    if(ride.getSeats() > 0) {
+                        rides.add(ride);
+                        allRides.add(ride);
+                    }
+                }
 
-                rides.addAll(theseRides);
+//                rides.addAll(theseRides);
+//                allRides.addAll(theseRides);
+
+
                 adapter.notifyDataSetChanged();
             }
         });
