@@ -18,7 +18,6 @@ public class ParseApplication extends Application {
         ParseObject.registerSubclass(Ride.class);
         Map<String,String> mapObj = System.getenv();
 
-//        @Value("${your.path.yml.string}")
         for (Map.Entry<String,String> entry : mapObj.entrySet()) {
             System.out.println("Key: " + entry.getKey()+ " Value: "+ entry.getValue());
         }
@@ -29,15 +28,11 @@ public class ParseApplication extends Application {
         }
         else {
             parseAppId = getString(R.string.parse_application_id);
-//            parseAppId = "fakle id";
         }
-//        return property ?: environmentVariable(name)
-
-//        fun environmentVariable(name: String) = System.getenv(name) ?: ""
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId((parseAppId))
-                .clientKey("TgP0awMuSwi0PKUdmW2YizIM2ZZXAoJE6x1KJYjF")
+                .clientKey("og3uLay98qgnHYzUlo9ufrCAMd2OdoUOm89ystIi")
                 .server("https://parseapi.back4app.com")
                 .build()
         );

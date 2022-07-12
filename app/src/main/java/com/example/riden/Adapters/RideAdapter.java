@@ -21,15 +21,15 @@ import com.parse.ParseFile;
 import java.util.List;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> {
-    Context context;
-    List<Ride> rides;
-    TextView tvDestination;
-    TextView tvDate;
-    TextView tvTime;
-    TextView tvSeats;
-    ImageButton ibCarImage;
-    ImageButton ibReserve;
-    User user = (User) User.getCurrentUser();
+    private Context context;
+    private List<Ride> rides;
+    private TextView tvDestination;
+    private TextView tvDate;
+    private TextView tvTime;
+    private TextView tvSeats;
+    private ImageButton ibCarImage;
+    private ImageButton ibReserve;
+    private User user = (User) User.getCurrentUser();
 
     public RideAdapter(Context context, List<Ride> rides) {
         this.context = context;
@@ -69,18 +69,12 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> {
                     ibReserve.setImageResource(R.drawable.car);
                     user.removeRide(ride);
                     ride.setSeats(ride.getSeats()  + 1);
-
-//                    holder.bind(ride);
-//                    tvSeats.setText(String.valueOf(ride.getSeats()));
                 }
                 else {
                     ibReserve.setImageResource(R.drawable.car_reserve);
 
                     user.addRide(ride);
                     ride.setSeats(ride.getSeats()  - 1);
-//                    holder.bind(ride);
-
-//                    tvSeats.setText(String.valueOf(ride.getSeats()));
                 }
 
                 String seats = String.valueOf(ride.getSeats());
