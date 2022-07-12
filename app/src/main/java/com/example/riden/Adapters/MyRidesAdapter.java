@@ -17,9 +17,10 @@ import com.parse.ParseFile;
 
 import java.util.List;
 
-public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
+final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
     private Context context;
     List<Ride> rides;
+    /**Representing the Destination of a Ride*/
     private TextView tvDestination;
     private TextView tvDate;
     private TextView tvTime;
@@ -34,7 +35,7 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHold
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         View rideView = LayoutInflater.from(context).inflate(R.layout.item_reserved_ride,
                 parent, false);
         return new MyRidesAdapter.ViewHolder(rideView);

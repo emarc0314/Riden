@@ -16,26 +16,11 @@ public class ParseApplication extends Application {
         super.onCreate();
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Ride.class);
-        Map<String,String> mapObj = System.getenv();
-
-        for (Map.Entry<String,String> entry : mapObj.entrySet()) {
-            System.out.println("Key: " + entry.getKey()+ " Value: "+ entry.getValue());
-        }
-
-        String parseAppId;
-        if(System.getenv("parse_id") != null) {
-            parseAppId = System.getenv("parse_id");
-        }
-        else {
-            parseAppId = getString(R.string.parse_application_id);
-        }
-
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId((parseAppId))
+                .applicationId((getString(R.string.parse_application_id)))
                 .clientKey("og3uLay98qgnHYzUlo9ufrCAMd2OdoUOm89ystIi")
                 .server("https://parseapi.back4app.com")
                 .build()
         );
     }
-
 }
