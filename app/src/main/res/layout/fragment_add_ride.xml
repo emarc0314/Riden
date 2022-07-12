@@ -35,6 +35,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/etPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Estimated Price"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/tvDepartureTime"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ibClock"
+        app:layout_constraintTop_toBottomOf="@+id/tvDepartureTime" />
+
     <TextView
         android:id="@+id/tvCalendarInput"
         android:layout_width="0dp"
@@ -109,12 +124,12 @@
         android:id="@+id/ibUploadCarImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="12dp"
         android:contentDescription="uploaded car image"
         android:src="@android:drawable/ic_menu_upload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNumberSeats"
+        app:layout_constraintTop_toBottomOf="@+id/etPrice"
         tools:src="@android:drawable/ic_menu_upload_you_tube" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,25 +6,38 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ParseClassName("Ride")
 public class Ride extends ParseObject {
-    public static final String DRIVER_KEY = "driver";
-    public static final String SEATS_KEY = "numberSeats";
-    public static final String CAR_IMAGE_KEY = "carImage";
-    public static final String IS_RESERVED_KEY = "isReserved";
-    public static final String CITY_PICKUP_KEY = "cityPickup";
-    public static final String STATE_PICKUP_KEY = "statePickup";
-    public static final String CITY_DESTINATION_KEY = "cityDestination";
-    public static final String STATE_DESTINATION_KEY = "stateDestination";
-    public static final String DEPARTURE_DATE_KEY = "departureDate";
+    private static final String DRIVER_KEY = "driver";
+    private static final String SEATS_KEY = "numberSeats";
+    private static final String CAR_IMAGE_KEY = "carImage";
+    private static final String IS_RESERVED_KEY = "isReserved";
+    private static final String CITY_PICKUP_KEY = "cityPickup";
+    private static final String STATE_PICKUP_KEY = "statePickup";
+    private static final String CITY_DESTINATION_KEY = "cityDestination";
+    private static final String STATE_DESTINATION_KEY = "stateDestination";
+    private static final String DEPARTURE_DATE_KEY = "departureDate";
 
-    public static final String PICKUP_ADDRESS_KEY = "pickupAddress";
-    public static final String DESTINATION_ADDRESS_KEY = "destinationAddress";
-    public static final String PICKUP_LAT_KEY = "pickupLat";
-    public static final String PICKUP_LONG_KEY = "pickupLong";
-    public static final String DESTINATION_LONG_KEY = "destinationLong";
-    public static final String DESTINATION_LAT_KEY = "destinationLat";
-    public static final String FULL_DATE_KEY = "fullDate";
+    private static final String PICKUP_ADDRESS_KEY = "pickupAddress";
+    private static final String DESTINATION_ADDRESS_KEY = "destinationAddress";
+    private static final String PICKUP_LAT_KEY = "pickupLat";
+    private static final String PICKUP_LONG_KEY = "pickupLong";
+    private static final String DESTINATION_LONG_KEY = "destinationLong";
+    private static final String DESTINATION_LAT_KEY = "destinationLat";
+    private static final String FULL_DATE_KEY = "fullDate";
+    private static final String USERS_RESERVED_KEY = "usersReserved";
+    private static final String ESTIMATED_PRICE_KEY = "estimatedPrice";
+
+    public void setPrice(String price) {
+        put(ESTIMATED_PRICE_KEY, price);
+    }
+
+    public String getPrice() {
+        return getString(ESTIMATED_PRICE_KEY);
+    }
 
     public void setPickupAddress(String address) {
         put(PICKUP_ADDRESS_KEY, address);
@@ -82,7 +95,29 @@ public class Ride extends ParseObject {
         return getString(FULL_DATE_KEY);
     }
 
+    @Override
+    public String getObjectId() {
+        return super.getObjectId();
+    }
 
+    public List<String> getReservees() {
+        List<User> reservees = getList(USERS_RESERVED_KEY);
+        ArrayList<String> usernames = new ArrayList<>();
+
+        for (User reservee: reservees) {
+            reservee.getUsername();
+        }
+        return usernames;
+    }
+
+    public void addReservee(User user) {
+        addUnique(USERS_RESERVED_KEY, user);
+    }
+    public void removeReservee(User user) {
+        ArrayList<User> userList = new ArrayList<>();
+        userList.add(user);
+        removeAll(USERS_RESERVED_KEY, userList);
+    }
 
     public ParseUser getDriver() {
         return getParseUser(DRIVER_KEY);

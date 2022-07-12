@@ -14,13 +14,12 @@ public class ParseApplication extends Application {
         super.onCreate();
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Ride.class);
-
+        
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId((getString(R.string.parse_application_id)))
-                .clientKey("TgP0awMuSwi0PKUdmW2YizIM2ZZXAoJE6x1KJYjF")
+                .clientKey("og3uLay98qgnHYzUlo9ufrCAMd2OdoUOm89ystIi")
                 .server("https://parseapi.back4app.com")
                 .build()
         );
     }
-
 }

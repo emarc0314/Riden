@@ -1,4 +1,4 @@
-package com.example.riden.activities.directionhelpers;
+package com.example.riden.activities.helpers;
 
 import android.content.Context;
 import android.graphics.Color;

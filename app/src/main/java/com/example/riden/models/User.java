@@ -4,6 +4,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,15 @@ public class User extends ParseUser {
     public static final String PROFILEPHOTO_KEY = "profilePhoto";
     public static final String CARIMAGE_KEY = "carImage";
     public static final String MYRIDES_KEY = "myRides";
+    public static final String MY_OFFERED_RIDES = "myOfferedRides";
 
+    public List<Ride> getMyOfferedRides() {
+        return getList(MY_OFFERED_RIDES);
+    }
+
+    public void addMyOfferedRide(Ride ride) {
+        addUnique(MY_OFFERED_RIDES, ride);
+    }
 
     public String getUsername() {
         return getString(USERNAME_KEY);
@@ -51,7 +60,18 @@ public class User extends ParseUser {
     }
 
     public List<Ride> getMyRides() {
-        return getList(MYRIDES_KEY);
+        List<Ride> rides = getList(MYRIDES_KEY);
+        return rides;
+    }
+
+    public List<String> getRideObjectIds() {
+        //return list of Usernames
+        List<Ride> rides = getList(MYRIDES_KEY);
+        ArrayList<String> rideObjectId = new ArrayList<>();
+        for (Ride ride: rides) {
+            rideObjectId.add(ride.getObjectId());
+        }
+        return rideObjectId;
     }
 
     public void addRide(Ride ride) {
@@ -63,5 +83,4 @@ public class User extends ParseUser {
         rideList.add(ride);
         removeAll(MYRIDES_KEY, rideList);
     }
-
 }

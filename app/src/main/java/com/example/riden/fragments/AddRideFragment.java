@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -39,6 +40,7 @@ import com.google.android.gms.common.api.Status;
 //import com.google.android.gms.location.places.Places;
 //import com.google.android.libraries.places.api.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 //import com.google.android.gms.location.places.zza;
 import com.google.android.libraries.places.api.model.AddressComponents;
@@ -54,6 +56,7 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -74,6 +77,7 @@ public class AddRideFragment extends Fragment {
     private Button btAddRide;
     private ImageButton ibUploadCarImage;
     private EditText etNumberSeats;
+    private EditText etPrice;
     public File photoFile;
     public String photoFileName = "photo.jpg";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -93,6 +97,7 @@ public class AddRideFragment extends Fragment {
     public Double destinationLat;
     public Double destinationLong;
 
+    MarkerOptions pickupLocation, destinationLocation;
 
     ParseFile image;
     boolean pickup = false;
@@ -117,7 +122,8 @@ public class AddRideFragment extends Fragment {
         return stateCode;
     }
 
-    private void saveRide(String cityPickup, String statePickup, String cityDestination, String stateDestination, String departureDate, String seats, ParseFile image) {
+    private void saveRide(String cityPickup, String statePickup, String cityDestination, String stateDestination, String departureDate, String seats, ParseFile image, String price) {
+        //TODO: check if all the parameters aren't null; if they aren't, then Toast a unsuccessfull add and prompt user to add other required fields
         Ride ride = new Ride();
         ride.setSeats(Integer.valueOf(seats));
         ride.setCarImage(image);
@@ -128,6 +134,7 @@ public class AddRideFragment extends Fragment {
         ride.setDepartureDate(departureDate);
         ride.setReserved(false);
         ride.setDriver(User.getCurrentUser());
+        ride.setPrice(price);
 
         ride.setFullDate(fullDate);
         ride.setPickupLat(pickupLat);
@@ -145,6 +152,7 @@ public class AddRideFragment extends Fragment {
                     Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
                 }
                 Log.i(TAG, "Post save was successful");
+                Toast.makeText(getContext(), "Successfully Added a Ride!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,6 +191,7 @@ public class AddRideFragment extends Fragment {
         btAddRide = view.findViewById(R.id.btAddRide);
         ibUploadCarImage = view.findViewById(R.id.ibUploadCarImage);
         etNumberSeats = view.findViewById(R.id.etNumberSeats);
+        etPrice = view.findViewById(R.id.etPrice);
         tvCalendarInput.setText(getTodaysDate());
 
         ibCalendar.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +205,8 @@ public class AddRideFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 seats = etNumberSeats.getText().toString();
-                saveRide(cityPickup,statePickup,cityDestination,stateDestination,departureDate,seats, image);
+                String price = etPrice.getText().toString();
+                saveRide(cityPickup,statePickup,cityDestination,stateDestination,departureDate,seats, image, price);
                 //TODO: Create a new ride, and add it to the list of existing rides
             }
         });
@@ -208,10 +218,6 @@ public class AddRideFragment extends Fragment {
                 List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(view.getContext());
                 startActivityForResult(intent, 100);
-
-//                PlacePicker.IntentBuilder builder;
-//                PlacePicker.IntentBuilder builder;
-//                builder = new PlacePicker.IntentBUilder();
             }
         });
 
@@ -221,7 +227,6 @@ public class AddRideFragment extends Fragment {
                 launchCamera();
             }
         });
-//        Places.init
 
         Places.initialize(view.getContext(), getString(R.string.google_maps_api_key));
         etDestination.setFocusable(false);
@@ -303,7 +308,6 @@ public class AddRideFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 100 && resultCode == RESULT_OK) {
             Place place = Autocomplete.getPlaceFromIntent(data);
-//            ArrayList<String> attributes = (ArrayList<String>) place.getAttributions();
             LatLng coordinates = place.getLatLng();
             Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
             List<Address> addresses = null;
@@ -313,15 +317,11 @@ public class AddRideFragment extends Fragment {
                         coordinates.latitude,
                         coordinates.longitude,
                         1); // Only retrieve 1 address
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
             Address address = addresses.get(0);
-//            String stateCode = getUSStateCode(address);
-//            String city = address.getLocality();
 
             if(pickup) {
                 etPickupLocation.setText(place.getAddress());
@@ -338,13 +338,25 @@ public class AddRideFragment extends Fragment {
                 destinationAddress = place.getAddress();
                 destinationLat = coordinates.latitude;
                 destinationLong = coordinates.longitude;
+
+                pickupLocation = new MarkerOptions().position(new LatLng(pickupLat, pickupLong)).title("Pickup Location");
+                destinationLocation = new MarkerOptions().position(new LatLng(destinationLat, destinationLong)).title("Destination Location");
+
+                float[] results = new float[1];
+                Location.distanceBetween(pickupLat, pickupLong, destinationLat, destinationLong, results);
+                float price = (float) (results[0] * 0.585/1609);
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                String priceShown = formatter.format(price);
+                etPrice.setText(priceShown);
+                Log.i("distance", String.valueOf(results[0]));
             }
         }
-        else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
+        else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
-        else if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+        else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ibUploadCarImage.setImageBitmap(takenImage);
@@ -354,8 +366,6 @@ public class AddRideFragment extends Fragment {
                 Log.i("this", "something went wrong!");
             }
         }
-
-
     }
 
     @Override
