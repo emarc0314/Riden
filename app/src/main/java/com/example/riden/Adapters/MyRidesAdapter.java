@@ -52,6 +52,11 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHold
         return rides.size();
     }
 
+    public void clear() {
+        rides.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

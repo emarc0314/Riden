@@ -144,6 +144,12 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         }
     };
 
+    public void clear() {
+        rides.clear();
+        allRides.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ViewHolder(@NonNull View itemView) {

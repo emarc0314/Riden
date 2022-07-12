@@ -68,6 +68,14 @@ public class RidesFragment extends Fragment {
         queryRides();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        adapter.clear();
+//        queryRides();
+
+    }
+
     private void queryRides() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
