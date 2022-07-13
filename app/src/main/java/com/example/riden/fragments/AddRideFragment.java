@@ -1,37 +1,68 @@
 package com.example.riden.fragments;
+//package placepic
 
 import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.riden.R;
+import com.example.riden.models.Ride;
+import com.example.riden.models.User;
 import com.google.android.gms.common.api.Status;
+//import com.google.android.gms.location.places.Places;
+//import com.google.android.libraries.places.api.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+//import com.google.android.gms.location.places.zza;
+import com.google.android.libraries.places.api.model.AddressComponents;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddRideFragment extends Fragment {
     public static final String TAG = "AddRideFragment";
@@ -40,19 +71,118 @@ public class AddRideFragment extends Fragment {
     private ImageButton ibCalendar;
     private TextView tvCalendarInput;
     private DatePickerDialog datePickerDialog;
+    private Button btAddRide;
+    private ImageButton ibUploadCarImage;
+    private EditText etNumberSeats;
+    public File photoFile;
+    public String photoFileName = "photo.jpg";
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+
+    public String cityPickup;
+    public String statePickup;
+    public String cityDestination;
+    public String stateDestination;
+    public String departureDate;
+    public String seats = "";
+
+    public String fullDate;
+    public String pickupAddress;
+    public String destinationAddress;
+    public Double pickupLat;
+    public Double pickupLong;
+    public Double destinationLat;
+    public Double destinationLong;
+
+
+    ParseFile image;
+    boolean pickup = false;
 
     public AddRideFragment() {
         // Required empty public constructor
     }
 
+    private String getUSStateCode(Address USAddress) {
+        String fullAddress = "";
+        for(int j = 0; j <= USAddress.getMaxAddressLineIndex(); j++)
+            if (USAddress.getAddressLine(j) != null)
+                fullAddress = fullAddress + " " + USAddress.getAddressLine(j);
+
+        String stateCode = null;
+        Pattern pattern = Pattern.compile(" [A-Z]{2} ");
+        String helper = fullAddress.toUpperCase().substring(0, fullAddress.toUpperCase().indexOf("USA"));
+        Matcher matcher = pattern.matcher(helper);
+        while (matcher.find())
+            stateCode = matcher.group().trim();
+
+        return stateCode;
+    }
+
+    private void saveRide(String cityPickup, String statePickup, String cityDestination, String stateDestination, String departureDate, String seats, ParseFile image) {
+        Ride ride = new Ride();
+        ride.setSeats(Integer.valueOf(seats));
+        ride.setCarImage(image);
+        ride.setCityDestination(cityDestination);
+        ride.setStateDestination(stateDestination);
+        ride.setCityPickup(cityPickup);
+        ride.setStatePickup(statePickup);
+        ride.setDepartureDate(departureDate);
+        ride.setReserved(false);
+        ride.setDriver(User.getCurrentUser());
+
+        ride.setFullDate(fullDate);
+        ride.setPickupLat(pickupLat);
+        ride.setPickupLong(pickupLong);
+        ride.setDestinationLong(destinationLong);
+        ride.setDestinationLat(destinationLat);
+        ride.setDestinationAddress(destinationAddress);
+        ride.setPickupAddress(pickupAddress);
+
+        ride.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "Error while saving",e);
+                    Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+                }
+                Log.i(TAG, "Post save was successful");
+            }
+        });
+    }
+
+    protected void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = getPhotoFileUri(photoFileName);
+
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    public File getPhotoFileUri(String fileName) {
+        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(TAG, "failed to create directory");
+        }
+
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         initDatePicker();
         etPickupLocation = view.findViewById(R.id.etPickupLocation);
         etDestination = view.findViewById(R.id.etDestination);
         ibCalendar = view.findViewById(R.id.ibCalendar);
         tvCalendarInput = view.findViewById(R.id.tvCalendarInput);
+        btAddRide = view.findViewById(R.id.btAddRide);
+        ibUploadCarImage = view.findViewById(R.id.ibUploadCarImage);
+        etNumberSeats = view.findViewById(R.id.etNumberSeats);
         tvCalendarInput.setText(getTodaysDate());
 
         ibCalendar.setOnClickListener(new View.OnClickListener() {
@@ -62,12 +192,43 @@ public class AddRideFragment extends Fragment {
             }
         });
 
+        btAddRide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seats = etNumberSeats.getText().toString();
+                saveRide(cityPickup,statePickup,cityDestination,stateDestination,departureDate,seats, image);
+                //TODO: Create a new ride, and add it to the list of existing rides
+            }
+        });
+        etPickupLocation.setFocusable(false);
+        etPickupLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickup = true;
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(view.getContext());
+                startActivityForResult(intent, 100);
+
+//                PlacePicker.IntentBuilder builder;
+//                PlacePicker.IntentBuilder builder;
+//                builder = new PlacePicker.IntentBUilder();
+            }
+        });
+
+        ibUploadCarImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchCamera();
+            }
+        });
+//        Places.init
+
         Places.initialize(view.getContext(), getString(R.string.google_maps_api_key));
         etDestination.setFocusable(false);
         etDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Initialize place field list
+                pickup = false;
                 List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(view.getContext());
                 startActivityForResult(intent, 100);
@@ -89,7 +250,10 @@ public class AddRideFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
+
                 String date = makeDateString(dayOfMonth, month, year);
+                fullDate = getMonthFormat(month) + " " + dayOfMonth + ", " + year;
+                departureDate = getMonthFormat(month) + " " + dayOfMonth;
                 tvCalendarInput.setText(date);
             }
         };
@@ -139,12 +303,59 @@ public class AddRideFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 100 && resultCode == RESULT_OK) {
             Place place = Autocomplete.getPlaceFromIntent(data);
-            etDestination.setText(place.getAddress());
+//            ArrayList<String> attributes = (ArrayList<String>) place.getAttributions();
+            LatLng coordinates = place.getLatLng();
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses =
+                        geocoder.getFromLocation(
+                        coordinates.latitude,
+                        coordinates.longitude,
+                        1); // Only retrieve 1 address
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            Address address = addresses.get(0);
+//            String stateCode = getUSStateCode(address);
+//            String city = address.getLocality();
+
+            if(pickup) {
+                etPickupLocation.setText(place.getAddress());
+                cityPickup = address.getLocality();
+                statePickup = getUSStateCode(address);
+                pickupAddress = place.getAddress();
+                pickupLat = coordinates.latitude;
+                pickupLong = coordinates.longitude;
+            }
+            else {
+                etDestination.setText(place.getAddress());
+                cityDestination = address.getLocality();
+                stateDestination = getUSStateCode(address);
+                destinationAddress = place.getAddress();
+                destinationLat = coordinates.latitude;
+                destinationLong = coordinates.longitude;
+            }
         }
         else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
+        else if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                ibUploadCarImage.setImageBitmap(takenImage);
+                image = new ParseFile(photoFile);
+            }
+            else {
+                Log.i("this", "something went wrong!");
+            }
+        }
+
+
     }
 
     @Override

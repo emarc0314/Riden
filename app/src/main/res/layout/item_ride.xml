@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tvDestination"
-        android:layout_width="71dp"
+        android:layout_width="wrap_content"
         android:layout_height="21dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="@+id/tvDate" />
 
     <TextView
-        android:id="@+id/tvSeats"
+        android:id="@+id/tvSeatsCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

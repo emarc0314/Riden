@@ -13,30 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
 import com.example.riden.models.Ride;
-import com.example.riden.models.User;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
-    Context context;
+final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
+    private Context context;
     List<Ride> rides;
-    TextView tvDestination;
-    TextView tvDate;
-    TextView tvTime;
-    TextView tvSeats;
-    ImageButton ibCarImage;
-    ImageButton ibReserve;
+    /**Representing the Destination of a Ride*/
+    private TextView tvDestination;
+    private TextView tvDate;
+    private TextView tvTime;
+    private TextView tvSeats;
+    private ImageButton ibCarImage;
+    private ImageButton ibReserve;
 
-    public MyRidesAdapter(Context context, List<Ride> rides) {
+    public MyRidesAdapter(final Context context, final List<Ride> rides) {
         this.context = context;
         this.rides = rides;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rideView = LayoutInflater.from(context).inflate(R.layout.item_ride, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+        View rideView = LayoutInflater.from(context).inflate(R.layout.item_reserved_ride,
+                parent, false);
         return new MyRidesAdapter.ViewHolder(rideView);
     }
 
@@ -57,13 +58,16 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHold
             tvDestination = itemView.findViewById(R.id.tvDestination);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvSeats = itemView.findViewById(R.id.tvSeats);
+            tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
             ibCarImage = itemView.findViewById(R.id.ibCarImage);
             ibReserve = itemView.findViewById(R.id.ibReserve);
         }
 
         public void bind(Ride ride) {
             tvSeats.setText(String.valueOf(ride.getSeats()));
+
+
+
             ParseFile carImage = ride.getCarImage();
             if (carImage != null) {
                 Glide.with(context).load(carImage.getUrl()).into(ibCarImage);
