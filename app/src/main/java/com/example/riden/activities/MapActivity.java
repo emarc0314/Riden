@@ -28,8 +28,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
-    MapView mMapView;
-    Location mCurrentLocation;
+    private MapView mMapView;
+    private Location mCurrentLocation;
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

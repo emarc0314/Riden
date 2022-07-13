@@ -35,12 +35,6 @@ public class MyRidesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private void fetchTimelineAsync(int i) {
-        // Send the network request to fetch the updated data
-        // `client` here is an instance of Android Async HTTP
-        // getHomeTimeline is an example endpoint.
-    }
-
     @Override
     public void onResume() {
         super.onResume();

@@ -31,22 +31,22 @@ import java.util.List;
 //import com.thecodecity;
 
 public class RideDetailActivity extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
-    GoogleMap map;
-    MarkerOptions pickupLocation, destinationLocation;
-    Polyline currentPolyline;
-    TextView tvPickupAddress;
-    TextView tvDestinationAddress;
-    TextView tvDepartureDate;
-    TextView tvDepartureTime;
-    ImageButton ibDriverProfileDetail;
-    ImageButton ibDriverCarDetail;
-    TextView tvPrice;
-    Button btReserve;
+    private GoogleMap map;
+    private MarkerOptions pickupLocation, destinationLocation;
+    private Polyline currentPolyline;
+    private TextView tvPickupAddress;
+    private TextView tvDestinationAddress;
+    private TextView tvDepartureDate;
+    private TextView tvDepartureTime;
+    private ImageButton ibDriverProfileDetail;
+    private ImageButton ibDriverCarDetail;
+    private TextView tvPrice;
+    private Button btReserve;
 
-    Ride ride;
-    User driver;
-    User currentUser;
-    Boolean isMyRidesView;
+    private Ride ride;
+    private User driver;
+    private User currentUser;
+    private Boolean isMyRidesView;
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
