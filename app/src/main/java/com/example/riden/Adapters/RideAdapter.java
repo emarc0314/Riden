@@ -27,8 +27,6 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements Filterable {
     private Context context;

@@ -110,6 +110,25 @@ public class Ride extends ParseObject {
         return usernames;
     }
 
+    public List<String> getReservees() {
+        List<User> reservees = getList(USERS_RESERVED_KEY);
+        ArrayList<String> usernames = new ArrayList<>();
+
+        for (User reservee: reservees) {
+            reservee.getUsername();
+        }
+        return usernames;
+    }
+
+    public void addReservee(User user) {
+        addUnique(USERS_RESERVED_KEY, user);
+    }
+    public void removeReservee(User user) {
+        ArrayList<User> userList = new ArrayList<>();
+        userList.add(user);
+        removeAll(USERS_RESERVED_KEY, userList);
+    }
+
     public void addReservee(User user) {
         addUnique(USERS_RESERVED_KEY, user);
     }
