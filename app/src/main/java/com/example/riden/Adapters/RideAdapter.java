@@ -3,6 +3,7 @@ package com.example.riden.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ride ride = rides.get(position);
+
         holder.bind(ride);
 
         String objectId = ride.getObjectId();
@@ -104,6 +106,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 user.saveInBackground();
             }
         });
+
     }
 
     @Override
@@ -136,19 +139,27 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 for (Ride ride: allRides) {
                     if(ride.getDestinationAddress().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(ride);
+                        Log.i("filter", ride.getDestinationAddress());
                     }
                 }
             }
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredList;
+//            Log.i("filter", filterResults.toString());
+//            notifyDataSetChanged();
             return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-
             rides.clear();
+            Log.i("I", "am being claled");
             rides.addAll((Collection<? extends Ride>) results.values);
+
+            for (Ride ride : rides) {
+                Log.i("rides_filter", ride.getDestinationAddress());
+            }
+
             notifyDataSetChanged();
         }
     };
@@ -174,7 +185,10 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         public void bind(Ride ride) {
             tvSeats.setText(String.valueOf(ride.getSeats()));
-            tvDestination.setText(ride.getCityDestination() + ", " + ride.getStateDestination());
+            String cityDestination = ride.getCityDestination();
+            String cityAddress = ride.getDestinationAddress();
+            tvDestination.setText(cityDestination + ", " + ride.getStateDestination());
+//            tvDestination.setText("all the same");
             tvDate.setText(ride.getDepartureDate());
             ParseFile carImage = ride.getCarImage();
             if (carImage != null) {
@@ -195,4 +209,5 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             }
         }
     }
+
 }

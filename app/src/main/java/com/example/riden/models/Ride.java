@@ -113,6 +113,7 @@ public class Ride extends ParseObject {
     public void addReservee(User user) {
         addUnique(USERS_RESERVED_KEY, user);
     }
+
     public void removeReservee(User user) {
         ArrayList<User> userList = new ArrayList<>();
         userList.add(user);
@@ -200,6 +201,5 @@ public class Ride extends ParseObject {
     public String getDepartureDate() {
         return getString(DEPARTURE_DATE_KEY);
     }
-
 
 }
