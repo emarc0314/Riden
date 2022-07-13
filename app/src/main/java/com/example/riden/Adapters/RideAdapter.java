@@ -30,16 +30,16 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements Filterable {
-    Context context;
-    List<Ride> rides;
-    List<Ride> allRides;
-    TextView tvDestination;
-    TextView tvDate;
-    TextView tvTime;
-    TextView tvSeats;
-    ImageButton ibCarImage;
-    ImageButton ibReserve;
-    User user = (User) User.getCurrentUser();
+    private Context context;
+    private List<Ride> rides;
+    private List<Ride> allRides;
+    private TextView tvDestination;
+    private TextView tvDate;
+    private TextView tvTime;
+    private TextView tvSeats;
+    private ImageButton ibCarImage;
+    private ImageButton ibReserve;
+    private User user = (User) User.getCurrentUser();
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
         this.context = context;
@@ -118,6 +118,14 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
     Filter filter = new Filter() {
 
+       //TODO: Implement trie data structure search
+
+        /**second complicated feature: type location, but your going in that radius
+         * apart from just the name of the location, show geographical coordintaes
+         * and see which rides going to that destination are close enough
+         * - AD Tree
+         * - geographical search Tree
+         * */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Ride> filteredList = new ArrayList<>();
@@ -126,7 +134,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             }
             else {
                 for (Ride ride: allRides) {
-                    if(ride.getDestinationAddress().contains(constraint.toString().toLowerCase())) {
+                    if(ride.getDestinationAddress().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(ride);
                     }
                 }
@@ -138,6 +146,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+
             rides.clear();
             rides.addAll((Collection<? extends Ride>) results.values);
             notifyDataSetChanged();

@@ -98,7 +98,7 @@ public class AddRideFragment extends Fragment {
     public Double destinationLong;
 
     MarkerOptions pickupLocation, destinationLocation;
-
+    private User user = (User) User.getCurrentUser();
     ParseFile image;
     boolean pickup = false;
 
@@ -144,6 +144,7 @@ public class AddRideFragment extends Fragment {
         ride.setDestinationAddress(destinationAddress);
         ride.setPickupAddress(pickupAddress);
 
+
         ride.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -155,6 +156,8 @@ public class AddRideFragment extends Fragment {
                 Toast.makeText(getContext(), "Successfully Added a Ride!", Toast.LENGTH_SHORT).show();
             }
         });
+        user.addMyOfferedRide(ride);
+        user.saveInBackground();
     }
 
     protected void launchCamera() {
@@ -344,6 +347,13 @@ public class AddRideFragment extends Fragment {
 
                 float[] results = new float[1];
                 Location.distanceBetween(pickupLat, pickupLong, destinationLat, destinationLong, results);
+                /** CALCULATION FOR PRICE
+                 * - adding a profit multiplier
+                 * - add a higher multiplier if it is evening or day
+                 * - counting the number of states crossed and multiply the price by that
+                 * - counting tolls on the way from point A to B (maybe use api for this)
+                 * - stretch goal - adding spotify
+                 */
                 float price = (float) (results[0] * 0.585/1609);
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
                 String priceShown = formatter.format(price);

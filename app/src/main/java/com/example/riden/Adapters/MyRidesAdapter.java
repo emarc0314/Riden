@@ -20,14 +20,14 @@ import com.parse.ParseFile;
 import java.util.List;
 
 public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
-    Context context;
-    List<Ride> rides;
-    TextView tvDestination;
-    TextView tvDate;
-    TextView tvTime;
-    TextView tvSeats;
-    ImageButton ibCarImage;
-    ImageButton ibReserve;
+    private Context context;
+    private List<Ride> rides;
+    private TextView tvDestination;
+    private TextView tvDate;
+    private TextView tvTime;
+    private TextView tvSeats;
+    private ImageButton ibCarImage;
+    private ImageButton ibReserve;
 
     public MyRidesAdapter(Context context, List<Ride> rides) {
         this.context = context;
