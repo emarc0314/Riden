@@ -1,16 +1,28 @@
 package com.example.riden.activities;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.riden.Adapters.MyRidesAdapter;
+import com.example.riden.Adapters.RidersAdapter;
 import com.example.riden.R;
+import com.example.riden.activities.helpers.SwipeToDeleteCallback;
 import com.example.riden.activities.helpers.TaskLoadedCallback;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
@@ -25,7 +37,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.example.riden.activities.helpers.FetchURL;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.snackbar.Snackbar;
 
+import org.w3c.dom.Text;
+
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 //import com.thecodecity;
@@ -51,6 +67,20 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
+    private ImageView ivProfilePop;
+    private TextView tvNamePop;
+    private TextView tvPhoneNumberPop;
+    private TextView tvYearPop;
+    private TextView tvMajorPop;
+    private ImageView ivCarPop;
+    private TextView tvLicensePlatePop;
+
+    private Boolean isDriver;
+    private RecyclerView rvRiders;
+    private List<User> riders;
+    private RidersAdapter adapter;
+    CoordinatorLayout clCoordinateProfileLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +96,8 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         ibDriverCarDetail = findViewById(R.id.ibDriverCarDetail);
         tvPrice = findViewById(R.id.tvPrice);
         btReserve = findViewById(R.id.btReserve);
+        rvRiders = findViewById(R.id.rvRiders);
+        clCoordinateProfileLayout = findViewById(R.id.clCoordinateProfileLayout);
 
         currentUser = (User) User.getCurrentUser();
         ride = getIntent().getParcelableExtra(Ride.class.getSimpleName());
@@ -81,6 +113,28 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         isMyRidesView = getIntent().getParcelableExtra("isMyRidesView");
+        isDriver = getIntent().getExtras().getBoolean("isDriver");
+
+        if(isDriver) {
+            ibDriverProfileDetail.setVisibility(View.GONE);
+            ibDriverCarDetail.setVisibility(View.GONE);
+            btReserve.setVisibility(View.GONE);
+
+            riders = new ArrayList<>();
+            adapter = new RidersAdapter(this, riders);
+            rvRiders.setAdapter(adapter);
+            rvRiders.setLayoutManager(new LinearLayoutManager(this));
+            riders.addAll(ride.getReservees());
+            adapter.notifyDataSetChanged();
+
+            enableSwipeToDeleteAndUndo();
+            //TODO: set field to be none
+        }
+        else {
+            rvRiders.setVisibility(View.GONE);
+        }
+
+
         pickupLocation = new MarkerOptions().position(new LatLng(ride.getPickupLat(), ride.getPickupLong())).title("Pickup Location");
         destinationLocation = new MarkerOptions().position(new LatLng(ride.getDestinationLat(), ride.getDestinationLong())).title("Destination Location");
 
@@ -95,12 +149,15 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 if(reserved) {
                     currentUser.removeRide(ride);
                     ride.setSeats(ride.getSeats() + 1);
+                    ride.removeReservee(currentUser);
                     btReserve.setText("Reserve");
+
                     //TODO: refresh the previous cell layout view
                 }
                 else {
                     ride.setSeats(ride.getSeats() - 1);
                     currentUser.addRide(ride);
+                    ride.addReservee(currentUser);
                     btReserve.setText("Reserved!");
                 }
 
@@ -124,6 +181,49 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         Glide.with(this).load(driver.getProfileImage().getUrl()).into(ibDriverProfileDetail);
         Glide.with(this).load(driver.getCarImage().getUrl()).into(ibDriverCarDetail);
     }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        if(isDriver) {
+//            adapter.clear();
+//            riders.addAll(ride.getReservees());
+//        }
+//
+////        rides.addAll(user.getMyRides());
+//    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                final User rider = adapter.getData().get(position);
+                adapter.removeItem(position);
+                ride.removeReservee(rider);
+                rider.removeRide(ride);
+
+                Snackbar snackbar = Snackbar
+                        .make(clCoordinateProfileLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.restoreItem(rider, position);
+                        ride.addReservee(rider);
+                        rvRiders.scrollToPosition(position);
+                        rider.addRide(ride);
+                    }
+                });
+                ride.saveInBackground();
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(rvRiders);
+    }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_orogin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -146,9 +246,11 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         ArrayList<MarkerOptions> markers = new ArrayList<>();
         markers.add(destinationLocation);
         markers.add(pickupLocation);
+
         for (MarkerOptions m : markers) {
             builder.include(m.getPosition());
         }
+
         LatLngBounds bounds = builder.build();
 
         int padding = 150;
@@ -170,11 +272,25 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
     }
 
+
     public void createProfileDetailDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
         final View profileDetailView = getLayoutInflater().inflate(R.layout.popup, null);
+        ivProfilePop = profileDetailView.findViewById(R.id.ivProfilePop);
+        tvNamePop = profileDetailView.findViewById(R.id.tvNamePop);
+        tvPhoneNumberPop = profileDetailView.findViewById(R.id.tvPhoneNumberPop);
+        tvYearPop = profileDetailView.findViewById(R.id.tvYearPop);
+        tvMajorPop = profileDetailView.findViewById(R.id.tvMajorPop);
+        ivCarPop = profileDetailView.findViewById(R.id.ivCarImagePop);
+
+        tvNamePop.setText(driver.getFullName());
+        tvPhoneNumberPop.setText(driver.getPhoneNumber());
+
+        Glide.with(this).load(driver.getProfileImage().getUrl()).into(ivProfilePop);
+        Glide.with(this).load(driver.getCarImage().getUrl()).into(ivCarPop);
 
         dialogBuilder.setView(profileDetailView);
+
         dialog = dialogBuilder.create();
         dialog.show();
     }

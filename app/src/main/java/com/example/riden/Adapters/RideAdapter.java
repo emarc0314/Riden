@@ -2,7 +2,6 @@ package com.example.riden.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,7 +21,6 @@ import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.ParseFile;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -145,8 +142,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             }
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredList;
-//            Log.i("filter", filterResults.toString());
-//            notifyDataSetChanged();
             return filterResults;
         }
 
@@ -174,10 +169,10 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDestination = itemView.findViewById(R.id.tvDestination);
+            tvDestination = itemView.findViewById(R.id.tvNameRider);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
-            ibCarImage = itemView.findViewById(R.id.ibCarImage);
+            ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
             ibReserve = itemView.findViewById(R.id.ibReserve);
             tvSeats = itemView.findViewById(R.id.tvSeatsCell);
             itemView.setOnClickListener(this);
@@ -205,6 +200,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
                 intent.putExtra(Ride.class.getSimpleName(), ride);
                 intent.putExtra("isMyRidesView", false);
+                intent.putExtra("isDriver",false);
                 context.startActivity(intent);
             }
         }

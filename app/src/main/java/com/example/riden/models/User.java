@@ -43,6 +43,11 @@ public class User extends ParseUser {
     }
 
     public String getFullName() {
+        try {
+            fetchIfNeeded().getParseFile(FULLNAME_KEY);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return getString(FULLNAME_KEY);
     }
 

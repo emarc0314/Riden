@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.riden.Adapters.MyRidesAdapter;
-import com.example.riden.Adapters.myOfferedRidesAdapter;
+import com.example.riden.Adapters.MyOfferedRidesAdapter;
 import com.example.riden.R;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
@@ -37,7 +36,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivCarImage;
     private RecyclerView rvDriverRides;
     protected List<Ride> myOfferedRides;
-    protected myOfferedRidesAdapter adapter;
+    protected MyOfferedRidesAdapter adapter;
 
     public User user = (User) User.getCurrentUser();
     public ProfileFragment() {
@@ -55,7 +54,7 @@ public class ProfileFragment extends Fragment {
 
         myOfferedRides = new ArrayList<>();
         rvDriverRides = view.findViewById(R.id.rvDriversRides);
-        adapter = new myOfferedRidesAdapter(getContext(), myOfferedRides);
+        adapter = new MyOfferedRidesAdapter(getContext(), myOfferedRides);
         rvDriverRides.setAdapter(adapter);
         rvDriverRides.setLayoutManager(new LinearLayoutManager(getContext()));
         myOfferedRides.addAll(user.getMyOfferedRides());
@@ -75,6 +74,16 @@ public class ProfileFragment extends Fragment {
                 displayUserInfo();
             }
         });
+    }
+
+    public void onResume() {
+        super.onResume();
+        adapter.clear();
+        adapter.clear();
+        myOfferedRides.addAll(user.getMyOfferedRides());
+
+
+//        rides.addAll(user.getMyRides());
     }
 
     private void displayUserInfo() {
