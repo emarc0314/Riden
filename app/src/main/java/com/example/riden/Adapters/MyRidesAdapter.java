@@ -62,11 +62,11 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDestination = itemView.findViewById(R.id.tvDestination);
+            tvDestination = itemView.findViewById(R.id.tvNameRider);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
-            ibCarImage = itemView.findViewById(R.id.ibCarImage);
+            ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
             ibReserve = itemView.findViewById(R.id.ibReserve);
             itemView.setOnClickListener(this);
         }

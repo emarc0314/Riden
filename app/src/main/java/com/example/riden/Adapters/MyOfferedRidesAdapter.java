@@ -1,6 +1,7 @@
 package com.example.riden.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
+import com.example.riden.activities.RideDetailActivity;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAdapter.ViewHolder> {
+public class MyOfferedRidesAdapter extends RecyclerView.Adapter<MyOfferedRidesAdapter.ViewHolder> {
     private Context context;
     private List<Ride> myOfferedRides;
     private TextView tvDestination;
@@ -29,7 +31,7 @@ public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAd
     private ImageButton ibReserve;
     private User user = (User) User.getCurrentUser();
 
-    public myOfferedRidesAdapter(Context context, List<Ride> myOfferedRides) {
+    public MyOfferedRidesAdapter(Context context, List<Ride> myOfferedRides) {
        this.context = context;
        this.myOfferedRides = myOfferedRides;
     }
@@ -38,7 +40,7 @@ public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rideView = LayoutInflater.from(context).inflate(R.layout.item_reserved_ride, parent, false);
-        return new myOfferedRidesAdapter.ViewHolder(rideView);
+        return new MyOfferedRidesAdapter.ViewHolder(rideView);
     }
 
     @Override
@@ -46,6 +48,14 @@ public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAd
         Ride offeredRide = myOfferedRides.get(position);
         holder.bind(offeredRide);
     }
+
+    public void clear() {
+        myOfferedRides.clear();
+        notifyDataSetChanged();
+//        rides.clear();
+//        notifyDataSetChanged();?
+    }
+
 
     @Override
     public int getItemCount() {
@@ -55,11 +65,11 @@ public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDestination = itemView.findViewById(R.id.tvDestination);
+            tvDestination = itemView.findViewById(R.id.tvNameRider);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
-            ibCarImage = itemView.findViewById(R.id.ibCarImage);
+            ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
             ibReserve = itemView.findViewById(R.id.ibReserve);
             itemView.setOnClickListener(this);
         }
@@ -76,7 +86,16 @@ public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAd
 
         @Override
         public void onClick(View v) {
-            //TODO: Implement OnClick for Driver's Offered Rides
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Ride ride = myOfferedRides.get(position);
+                Intent intent = new Intent(context, RideDetailActivity.class);
+
+                intent.putExtra(Ride.class.getSimpleName(), ride);
+                intent.putExtra("isMyRidesView", false);
+                intent.putExtra("isDriver",true);
+                context.startActivity(intent);
+            }
         }
     }
 }

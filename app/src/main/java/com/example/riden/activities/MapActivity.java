@@ -44,7 +44,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         else {
             mMap.setMyLocationEnabled(true);
         }
-
     }
 
 
@@ -103,5 +102,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

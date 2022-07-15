@@ -56,7 +56,7 @@
         app:layout_constraintStart_toStartOf="@+id/tvYearPop" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/ivCarImagePop"
         android:layout_width="250dp"
         android:layout_height="150dp"
         android:layout_marginTop="60dp"
@@ -68,14 +68,14 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/tvLicensePlatePop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
         android:text="License Plate"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/imageView7"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:layout_constraintStart_toStartOf="@+id/ivCarImagePop"
+        app:layout_constraintTop_toBottomOf="@+id/ivCarImagePop"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
