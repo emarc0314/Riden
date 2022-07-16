@@ -3,6 +3,7 @@ package com.example.riden.activities;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -38,6 +39,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.example.riden.activities.helpers.FetchURL;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import org.w3c.dom.Text;
 
@@ -63,6 +67,7 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
     private User driver;
     private User currentUser;
     private Boolean isMyRidesView;
+    private User rider;
 
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -198,10 +203,12 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
-                final User rider = adapter.getData().get(position);
+                rider = adapter.getData().get(position);
                 adapter.removeItem(position);
-                ride.removeReservee(rider);
                 rider.removeRide(ride);
+                ride.removeReservee(rider);
+
+//                rider.removeRide(ride);
 
                 Snackbar snackbar = Snackbar
                         .make(clCoordinateProfileLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
@@ -214,8 +221,17 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                         rider.addRide(ride);
                     }
                 });
-                ride.saveInBackground();
 
+
+
+                rider.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.i("I succeeded", "I deleted the thing");
+                    }
+                });
+
+                ride.saveInBackground();
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();
             }

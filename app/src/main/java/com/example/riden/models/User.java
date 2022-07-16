@@ -86,6 +86,7 @@ public class User extends ParseUser {
     public void removeRide(Ride ride) {
         ArrayList<Ride> rideList = new ArrayList<>();
         rideList.add(ride);
+        //object name
         removeAll(MYRIDES_KEY, rideList);
     }
 }

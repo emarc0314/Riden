@@ -7,11 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.riden.Adapters.MyRidesAdapter;
 import com.example.riden.R;
@@ -29,6 +33,7 @@ public class MyRidesFragment extends Fragment {
     private RecyclerView rvRides;
     protected List<Ride> rides;
     protected MyRidesAdapter adapter;
+
     User user = (User) User.getCurrentUser();
 
     public MyRidesFragment() {
@@ -52,6 +57,8 @@ public class MyRidesFragment extends Fragment {
         rvRides.setLayoutManager(new LinearLayoutManager(getContext()));
         rides.addAll(user.getMyRides());
         adapter.notifyDataSetChanged();
+
+
     }
 
     @Override
