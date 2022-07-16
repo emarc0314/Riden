@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
 import com.example.riden.activities.RideDetailActivity;
+import com.example.riden.fragments.RidesFragment;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.ParseFile;
@@ -28,13 +29,7 @@ import java.util.List;
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements Filterable {
     private Context context;
     private List<Ride> rides;
-    private List<Ride> allRides;
-    private TextView tvDestination;
-    private TextView tvDate;
-    private TextView tvTime;
-    private TextView tvSeats;
-    private ImageButton ibCarImage;
-    private ImageButton ibReserve;
+    private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
@@ -59,37 +54,36 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ride ride = rides.get(position);
-
         holder.bind(ride);
 
         String objectId = ride.getObjectId();
         List<String> rideObjectIds = user.getRideObjectIds();
         if(rideObjectIds.contains(objectId)) {
-            ibReserve.setImageResource(R.drawable.car_reserve);
+            holder.ibReserve.setImageResource(R.drawable.car_reserve);
         }
         else {
-            ibReserve.setImageResource(R.drawable.car);
+            holder.ibReserve.setImageResource(R.drawable.car);
         }
 
-        tvSeats.setText(String.valueOf(ride.getSeats()));
+        holder.tvSeats.setText(String.valueOf(ride.getSeats()));
 
-        ibReserve.setOnClickListener(new View.OnClickListener() {
+        holder.ibReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //add the ride in Rides view to list of myRides
                 Ride ride = rides.get(holder.getAdapterPosition());
                 boolean isReserved = ride.isReserved();
-                ibReserve = v.findViewById(R.id.ibReserve);
-                tvSeats = v.findViewById(R.id.tvSeatsCell);
+                holder.ibReserve = v.findViewById(R.id.ibReserve);
+                holder.tvSeats = v.findViewById(R.id.tvSeatsCell);
 
                 if(user.getRideObjectIds().contains(ride.getObjectId())) {
-                    ibReserve.setImageResource(R.drawable.car);
+                    holder.ibReserve.setImageResource(R.drawable.car);
                     user.removeRide(ride);
                     ride.removeReservee(user);
                     ride.setSeats(ride.getSeats()  + 1);
                 }
                 else {
-                    ibReserve.setImageResource(R.drawable.car_reserve);
+                    holder.ibReserve.setImageResource(R.drawable.car_reserve);
                     user.addRide(ride);
                     ride.addReservee(user);
                     ride.setSeats(ride.getSeats()  - 1);
@@ -111,8 +105,28 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
     @Override
     public Filter getFilter() {
+        Log.i("I'm used", "getFilter");
         return filter;
     }
+
+    public Filter getSpecificFilter(String type) {
+        Log.i("oioi", "getSpecificFilter");
+        if(type.equals("Geo")) return geoFilter;
+        else return filter;
+    }
+
+    Filter geoFilter = new Filter() {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+        }
+    };
 
     Filter filter = new Filter() {
 
@@ -147,11 +161,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         protected void publishResults(CharSequence constraint, FilterResults results) {
             rides.clear();
             Log.i("I", "am being claled");
-            rides.addAll((Collection<? extends Ride>) results.values);
+            rides.addAll((ArrayList<Ride>) results.values);
+
 
             for (Ride ride : rides) {
                 Log.i("rides_filter", ride.getDestinationAddress());
             }
+            notifyItemRangeChanged(0,rides.size());
 
             notifyDataSetChanged();
         }
@@ -164,6 +180,12 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView tvDestination;
+        public TextView tvDate;
+        public TextView tvTime;
+        public TextView tvSeats;
+        public ImageButton ibCarImage;
+        public ImageButton ibReserve;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -181,7 +203,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             String cityDestination = ride.getCityDestination();
             String cityAddress = ride.getDestinationAddress();
             tvDestination.setText(cityDestination + ", " + ride.getStateDestination());
-//            tvDestination.setText("all the same");
             tvDate.setText(ride.getDepartureDate());
             ParseFile carImage = ride.getCarImage();
             if (carImage != null) {
@@ -203,5 +224,4 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             }
         }
     }
-
 }

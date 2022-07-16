@@ -19,7 +19,7 @@
         <entry key="app/src/main/res/layout/fragment_add_ride.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_my_rides.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_rides.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_rides.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_reserved_ride.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_ride.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_rider.xml" value="0.4270833333333333" />
