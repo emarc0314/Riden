@@ -29,6 +29,7 @@ import java.util.List;
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements Filterable {
     private Context context;
     private List<Ride> rides;
+    private List<Ride> allRides;
     private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
 
@@ -88,7 +89,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     };
 
     Filter filter = new Filter() {
-
        //TODO: Implement trie data structure search
 
         /**second complicated feature: type location, but your going in that radius
@@ -107,7 +107,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 for (Ride ride: allRides) {
                     if(ride.getDestinationAddress().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(ride);
-                        Log.i("filter", ride.getDestinationAddress());
                     }
                 }
             }
@@ -119,15 +118,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             rides.clear();
-            Log.i("I", "am being claled");
             rides.addAll((ArrayList<Ride>) results.values);
-
-
-            for (Ride ride : rides) {
-                Log.i("rides_filter", ride.getDestinationAddress());
-            }
             notifyItemRangeChanged(0,rides.size());
-
             notifyDataSetChanged();
         }
     };
@@ -215,7 +207,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             if (position != RecyclerView.NO_POSITION) {
                 Ride ride = rides.get(position);
                 Intent intent = new Intent(context, RideDetailActivity.class);
-
                 intent.putExtra(Ride.class.getSimpleName(), ride);
                 intent.putExtra("isMyRidesView", false);
                 intent.putExtra("isDriver",false);

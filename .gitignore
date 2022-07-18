@@ -16,6 +16,8 @@
 app/build
 app/src/main/res/values/secrets.xml
 .gradle
+.idea
+
 
 
 executionHistory.lock
