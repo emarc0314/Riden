@@ -22,8 +22,12 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
+      
+    - name: Access SECRETS
       env:
-        parse_id: ${{ secrets.PARSE_APPLICATION_ID}}
+        GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        PARSE_ID: ${{ secrets.PARSE_APPLICATION_ID}}
+      run: echo GOOGLE_MAPS_API_KEY=\"$GOOGLE_MAPS_API_KEY\" > ./secrets.properties
 
+    - name: Build with Gradle
       run: ./gradlew build
