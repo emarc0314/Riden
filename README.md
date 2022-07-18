@@ -8,7 +8,7 @@
 1. [Product Spec](#Product-Spec)
 1. [Wireframes](#Wireframes)
 2. [Schema](#Schema)
-
+ 
 ## Overview
 ### Description
 A transportation app designed to help college students get from one place to another. It will provide a user a list or ride options from students from their area and school, and allow them to place themselves as a ride otpion as well.

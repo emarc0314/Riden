@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button23"
+            android:id="@+id/btReserve"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="30dp"
@@ -98,9 +98,9 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDepartureTimeDetail"
+            app:layout_constraintTop_toBottomOf="@+id/tvPrice"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageButton
@@ -126,6 +126,17 @@
             app:layout_constraintTop_toTopOf="@+id/tvPickupAddress"
             app:srcCompat="@drawable/quantum_ic_arrow_back_grey600_24"
             tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDepartureTimeDetail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

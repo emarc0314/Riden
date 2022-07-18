@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,19 +16,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.riden.Adapters.MyRidesAdapter;
+import com.example.riden.Adapters.myOfferedRidesAdapter;
 import com.example.riden.R;
+import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProfileFragment extends Fragment {
-    ImageButton ibProfileImage;
-    TextView tvUsername;
-    TextView tvFullName;
-    TextView tvCar;
-    ImageView ivCarImage;
+    private ImageButton ibProfileImage;
+    private TextView tvUsername;
+    private TextView tvFullName;
+    private TextView tvCar;
+    private ImageView ivCarImage;
+    private RecyclerView rvDriverRides;
+    protected List<Ride> myOfferedRides;
+    protected myOfferedRidesAdapter adapter;
 
     public User user = (User) User.getCurrentUser();
     public ProfileFragment() {
@@ -41,6 +52,14 @@ public class ProfileFragment extends Fragment {
         tvFullName = view.findViewById(R.id.tvFullName);
         tvCar = view.findViewById(R.id.tvCar);
         ivCarImage = view.findViewById(R.id.ivCar);
+
+        myOfferedRides = new ArrayList<>();
+        rvDriverRides = view.findViewById(R.id.rvDriversRides);
+        adapter = new myOfferedRidesAdapter(getContext(), myOfferedRides);
+        rvDriverRides.setAdapter(adapter);
+        rvDriverRides.setLayoutManager(new LinearLayoutManager(getContext()));
+        myOfferedRides.addAll(user.getMyOfferedRides());
+        adapter.notifyDataSetChanged();
 
         ibProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override

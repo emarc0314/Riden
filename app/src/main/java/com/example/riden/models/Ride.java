@@ -29,7 +29,15 @@ public class Ride extends ParseObject {
     private static final String DESTINATION_LAT_KEY = "destinationLat";
     private static final String FULL_DATE_KEY = "fullDate";
     private static final String USERS_RESERVED_KEY = "usersReserved";
-    private static final String OBJECT_ID_KEY = "objectId";
+    private static final String ESTIMATED_PRICE_KEY = "estimatedPrice";
+
+    public void setPrice(String price) {
+        put(ESTIMATED_PRICE_KEY, price);
+    }
+
+    public String getPrice() {
+        return getString(ESTIMATED_PRICE_KEY);
+    }
 
     public void setPickupAddress(String address) {
         put(PICKUP_ADDRESS_KEY, address);
@@ -92,36 +100,16 @@ public class Ride extends ParseObject {
         return super.getObjectId();
     }
 
-    //    public String getObjectId() {
-//        id
-//
-//        try {
-//            fetchIfNeeded().getString(OBJECT_ID_KEY);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return getString(OBJECT_ID_KEY);
-//
-//
-////        return getString(OBJECT_ID_KEY);
-//    }
 
     public List<String> getReservees() {
         List<User> reservees = getList(USERS_RESERVED_KEY);
         ArrayList<String> usernames = new ArrayList<>();
 
-
         for (User reservee: reservees) {
-
             reservee.getUsername();
-//            usernames.add(reservee.getUsername());
-//            usernames.add(reservee.getUsername());
-
         }
         return usernames;
     }
-
-
 
     public void addReservee(User user) {
         addUnique(USERS_RESERVED_KEY, user);
@@ -213,6 +201,5 @@ public class Ride extends ParseObject {
     public String getDepartureDate() {
         return getString(DEPARTURE_DATE_KEY);
     }
-
 
 }

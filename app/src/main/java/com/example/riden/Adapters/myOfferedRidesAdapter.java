@@ -1,7 +1,6 @@
 package com.example.riden.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,50 +12,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
-import com.example.riden.activities.RideDetailActivity;
 import com.example.riden.models.Ride;
+import com.example.riden.models.User;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-
-final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
+public class myOfferedRidesAdapter extends RecyclerView.Adapter<myOfferedRidesAdapter.ViewHolder> {
     private Context context;
-    List<Ride> rides;
+    private List<Ride> myOfferedRides;
     private TextView tvDestination;
     private TextView tvDate;
     private TextView tvTime;
     private TextView tvSeats;
     private ImageButton ibCarImage;
     private ImageButton ibReserve;
+    private User user = (User) User.getCurrentUser();
 
-    public MyRidesAdapter(final Context context, final List<Ride> rides) {
-        this.context = context;
-        this.rides = rides;
+    public myOfferedRidesAdapter(Context context, List<Ride> myOfferedRides) {
+       this.context = context;
+       this.myOfferedRides = myOfferedRides;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        View rideView = LayoutInflater.from(context).inflate(R.layout.item_reserved_ride,
-                parent, false);
-        return new MyRidesAdapter.ViewHolder(rideView);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View rideView = LayoutInflater.from(context).inflate(R.layout.item_reserved_ride, parent, false);
+        return new myOfferedRidesAdapter.ViewHolder(rideView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Ride ride = rides.get(position);
-        holder.bind(ride);
+        Ride offeredRide = myOfferedRides.get(position);
+        holder.bind(offeredRide);
     }
 
     @Override
     public int getItemCount() {
-        return rides.size();
-    }
-
-    public void clear() {
-        rides.clear();
-        notifyDataSetChanged();
+        return myOfferedRides.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,11 +64,11 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Ride ride) {
-            tvSeats.setText(String.valueOf(ride.getSeats()));
-            tvDestination.setText(ride.getCityDestination() + ", " + ride.getStateDestination());
+        public void bind(Ride offeredRide) {
+            tvSeats.setText(String.valueOf(offeredRide.getSeats()));
+            tvDestination.setText(offeredRide.getCityDestination() + ", " + offeredRide.getStateDestination());
 
-            ParseFile carImage = ride.getCarImage();
+            ParseFile carImage = offeredRide.getCarImage();
             if (carImage != null) {
                 Glide.with(context).load(carImage.getUrl()).into(ibCarImage);
             }
@@ -83,15 +76,7 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                Ride ride = rides.get(position);
-                Intent intent = new Intent(context, RideDetailActivity.class);
-
-                intent.putExtra(Ride.class.getSimpleName(), ride);
-                intent.putExtra("isMyRidesView", true);
-                context.startActivity(intent);
-            }
+            //TODO: Implement OnClick for Driver's Offered Rides
         }
     }
 }

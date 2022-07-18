@@ -11,9 +11,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.riden.R;
+import com.example.riden.models.User;
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 
 public class LoginActivity extends AppCompatActivity {
     public static final String TAG = "LoginActivity";
@@ -39,22 +44,41 @@ public class LoginActivity extends AppCompatActivity {
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone = etUsername.getText().toString();
+                String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                loginUser(phone, password);
+                loginUser(username, password);
             }
         });
 
         btSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+                signUpUser(username, password);
             }
         });
     }
 
     private void signUpUser(String username, String password) {
-
+        if(!username.isEmpty() && !password.isEmpty()) {
+//            ParseUser user = new ParseUser();
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e == null) {
+                        Toast.makeText(LoginActivity.this, "Success Sign Up!", Toast.LENGTH_SHORT).show();
+                        goMainActivity();
+                    }
+                    else {
+                        Toast.makeText(LoginActivity.this, "Unsuccessful " + e.getStackTrace(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     private void loginUser(String username, String password) {
