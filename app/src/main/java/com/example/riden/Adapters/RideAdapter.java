@@ -32,12 +32,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     private Context context;
     private List<Ride> rides;
     private List<Ride> allRides;
-    private TextView tvDestination;
-    private TextView tvDate;
-    private TextView tvTime;
-    private TextView tvSeats;
-    private ImageButton ibCarImage;
-    private ImageButton ibReserve;
+
     private User user = (User) User.getCurrentUser();
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
@@ -62,49 +57,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ride ride = rides.get(position);
-
         holder.bind(ride);
-
-        String objectId = ride.getObjectId();
-        List<String> rideObjectIds = user.getRideObjectIds();
-        if(rideObjectIds.contains(objectId)) {
-            ibReserve.setImageResource(R.drawable.car_reserve);
-        }
-        else {
-            ibReserve.setImageResource(R.drawable.car);
-        }
-
-        tvSeats.setText(String.valueOf(ride.getSeats()));
-
-        ibReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //add the ride in Rides view to list of myRides
-                Ride ride = rides.get(holder.getAdapterPosition());
-                boolean isReserved = ride.isReserved();
-                ibReserve = v.findViewById(R.id.ibReserve);
-                tvSeats = v.findViewById(R.id.tvSeatsCell);
-
-                if(user.getRideObjectIds().contains(ride.getObjectId())) {
-                    ibReserve.setImageResource(R.drawable.car);
-                    user.removeRide(ride);
-                    ride.removeReservee(user);
-                    ride.setSeats(ride.getSeats()  + 1);
-                }
-                else {
-                    ibReserve.setImageResource(R.drawable.car_reserve);
-                    user.addRide(ride);
-                    ride.addReservee(user);
-                    ride.setSeats(ride.getSeats()  - 1);
-                }
-
-                String seats = String.valueOf(ride.getSeats());
-                ride.setReserved(!isReserved);
-                ride.saveInBackground();
-                user.saveInBackground();
-            }
-        });
-
     }
 
     @Override
@@ -118,7 +71,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     }
 
     Filter filter = new Filter() {
-
        //TODO: Implement trie data structure search
 
         /**second complicated feature: type location, but your going in that radius
@@ -137,27 +89,18 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 for (Ride ride: allRides) {
                     if(ride.getDestinationAddress().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(ride);
-                        Log.i("filter", ride.getDestinationAddress());
                     }
                 }
             }
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredList;
-//            Log.i("filter", filterResults.toString());
-//            notifyDataSetChanged();
             return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             rides.clear();
-            Log.i("I", "am being claled");
             rides.addAll((Collection<? extends Ride>) results.values);
-
-            for (Ride ride : rides) {
-                Log.i("rides_filter", ride.getDestinationAddress());
-            }
-
             notifyDataSetChanged();
         }
     };
@@ -169,6 +112,12 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView tvDestination;
+        private TextView tvDate;
+        private TextView tvTime;
+        private TextView tvSeats;
+        private ImageButton ibCarImage;
+        private ImageButton ibReserve;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -186,12 +135,51 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             String cityDestination = ride.getCityDestination();
             String cityAddress = ride.getDestinationAddress();
             tvDestination.setText(cityDestination + ", " + ride.getStateDestination());
-//            tvDestination.setText("all the same");
             tvDate.setText(ride.getDepartureDate());
             ParseFile carImage = ride.getCarImage();
+            String objectId = ride.getObjectId();
+            List<String> rideObjectIds = user.getRideObjectIds();
+            tvSeats.setText(String.valueOf(ride.getSeats()));
+
             if (carImage != null) {
                 Glide.with(context).load(carImage.getUrl()).into(ibCarImage);
             }
+
+            if(rideObjectIds.contains(objectId)) {
+                ibReserve.setImageResource(R.drawable.car_reserve);
+            }
+            else {
+                ibReserve.setImageResource(R.drawable.car);
+            }
+
+            ibReserve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //add the ride in Rides view to list of myRides
+                    Ride ride = rides.get(getAdapterPosition());
+                    boolean isReserved = ride.isReserved();
+                    ibReserve = v.findViewById(R.id.ibReserve);
+                    tvSeats = v.findViewById(R.id.tvSeatsCell);
+
+                    if(user.getRideObjectIds().contains(ride.getObjectId())) {
+                        ibReserve.setImageResource(R.drawable.car);
+                        user.removeRide(ride);
+                        ride.removeReservee(user);
+                        ride.setSeats(ride.getSeats()  + 1);
+                    }
+                    else {
+                        ibReserve.setImageResource(R.drawable.car_reserve);
+                        user.addRide(ride);
+                        ride.addReservee(user);
+                        ride.setSeats(ride.getSeats()  - 1);
+                    }
+
+                    String seats = String.valueOf(ride.getSeats());
+                    ride.setReserved(!isReserved);
+                    ride.saveInBackground();
+                    user.saveInBackground();
+                }
+            });
         }
 
         @Override
@@ -200,12 +188,10 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             if (position != RecyclerView.NO_POSITION) {
                 Ride ride = rides.get(position);
                 Intent intent = new Intent(context, RideDetailActivity.class);
-
                 intent.putExtra(Ride.class.getSimpleName(), ride);
                 intent.putExtra("isMyRidesView", false);
                 context.startActivity(intent);
             }
         }
     }
-
 }
