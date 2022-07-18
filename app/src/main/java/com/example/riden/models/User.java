@@ -43,6 +43,11 @@ public class User extends ParseUser {
     }
 
     public String getFullName() {
+        try {
+            fetchIfNeeded().getParseFile(FULLNAME_KEY);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return getString(FULLNAME_KEY);
     }
 
@@ -81,6 +86,7 @@ public class User extends ParseUser {
     public void removeRide(Ride ride) {
         ArrayList<Ride> rideList = new ArrayList<>();
         rideList.add(ride);
+        //object name
         removeAll(MYRIDES_KEY, rideList);
     }
 }

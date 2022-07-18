@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cvItemView"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:background="#D6D1D1">
+    android:background="#00FFFFFF">
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -42,12 +42,11 @@
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="89dp"
                 android:text="5:56PM"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tvDate"
-                app:layout_constraintStart_toStartOf="@+id/tvDate"
-                app:layout_constraintTop_toBottomOf="@+id/tvDate"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintStart_toEndOf="@+id/tvNameRider"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/ibProfileImageRider"
@@ -60,42 +59,9 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                android:id="@+id/tvSeatsReserved"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="5"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/ivCarSeat"
-                app:layout_constraintHorizontal_bias="0.875"
-                app:layout_constraintStart_toStartOf="@+id/ivCarSeat"
-                app:layout_constraintTop_toBottomOf="@+id/ivCarSeat" />
-
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:text="JUN 6"
-                app:layout_constraintEnd_toStartOf="@+id/ivCarSeat"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/ivCarSeat"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.342"
-                app:srcCompat="@drawable/car_seat"
-                tools:srcCompat="@drawable/car_seat" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

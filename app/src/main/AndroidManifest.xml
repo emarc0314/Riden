@@ -29,6 +29,9 @@
         android:theme="@style/Theme.Riden"
         tools:targetApi="31">
         <activity
+            android:name=".activities.DriverRideDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.RideDetailActivity"
             android:exported="false" />
         <activity

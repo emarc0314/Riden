@@ -13,7 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.riden.Adapters.RideAdapter;
 import com.example.riden.R;
@@ -25,13 +29,14 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RidesFragment extends Fragment {
+public class RidesFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private RecyclerView rvRides;
     protected List<Ride> rides;
     protected List<Ride> allRides;
     protected RideAdapter adapter;
     private SearchView searchView;
     public static final String TAG = "RidesFragment";
+    private Spinner spMiles;
 
     public RidesFragment() {
         // Required empty public constructor
@@ -50,6 +55,34 @@ public class RidesFragment extends Fragment {
         adapter = new RideAdapter(getContext(), rides, allRides);
         searchView = view.findViewById(R.id.searchView);
 
+        spMiles = view.findViewById(R.id.spMiles);
+        String[] items = new String[]{"1","5","20"};
+
+        ArrayAdapter<CharSequence> milesAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.miles, android.R.layout.simple_spinner_dropdown_item);
+        milesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+//                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spMiles.setAdapter(milesAdapter);
+//            spMiles.setOnItemClickListener(view);
+        spMiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = parent.getItemAtPosition(position).toString();
+                if(!text.equals("None")) {
+                    int miles = Integer.valueOf(text);
+                    //call funciton to filter cells based on the location they searched
+
+                }
+                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -59,6 +92,9 @@ public class RidesFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
+//                adapter.getSpecificFilter("").filter(newText);
+
+//                adapter.getFilter().filter(newText);
 
                 return false;
             }
@@ -114,5 +150,15 @@ public class RidesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_rides, container, false);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

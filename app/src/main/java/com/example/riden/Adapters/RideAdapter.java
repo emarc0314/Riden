@@ -2,7 +2,6 @@ package com.example.riden.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +12,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
 import com.example.riden.activities.RideDetailActivity;
+import com.example.riden.fragments.RidesFragment;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.ParseFile;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +30,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     private Context context;
     private List<Ride> rides;
     private List<Ride> allRides;
-
+    private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
@@ -67,8 +65,28 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
     @Override
     public Filter getFilter() {
+        Log.i("I'm used", "getFilter");
         return filter;
     }
+
+    public Filter getSpecificFilter(String type) {
+        Log.i("oioi", "getSpecificFilter");
+        if(type.equals("Geo")) return geoFilter;
+        else return filter;
+    }
+
+    Filter geoFilter = new Filter() {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+        }
+    };
 
     Filter filter = new Filter() {
        //TODO: Implement trie data structure search
@@ -100,7 +118,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             rides.clear();
-            rides.addAll((Collection<? extends Ride>) results.values);
+            rides.addAll((ArrayList<Ride>) results.values);
+            notifyItemRangeChanged(0,rides.size());
             notifyDataSetChanged();
         }
     };
@@ -121,10 +140,10 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDestination = itemView.findViewById(R.id.tvDestination);
+            tvDestination = itemView.findViewById(R.id.tvNameRider);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
-            ibCarImage = itemView.findViewById(R.id.ibCarImage);
+            ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
             ibReserve = itemView.findViewById(R.id.ibReserve);
             tvSeats = itemView.findViewById(R.id.tvSeatsCell);
             itemView.setOnClickListener(this);
@@ -190,6 +209,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 Intent intent = new Intent(context, RideDetailActivity.class);
                 intent.putExtra(Ride.class.getSimpleName(), ride);
                 intent.putExtra("isMyRidesView", false);
+                intent.putExtra("isDriver",false);
                 context.startActivity(intent);
             }
         }

@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +27,6 @@ import java.util.List;
 final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
     private Context context;
     List<Ride> rides;
-    private TextView tvDestination;
-    private TextView tvDate;
-    private TextView tvTime;
-    private TextView tvSeats;
-    private ImageButton ibCarImage;
-    private ImageButton ibReserve;
 
     public MyRidesAdapter(final Context context, final List<Ride> rides) {
         this.context = context;
@@ -60,14 +58,22 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView tvDestination;
+        private TextView tvDate;
+        private TextView tvTime;
+        private TextView tvSeats;
+        private ImageButton ibCarImage;
+        private ImageButton ibReserve;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDestination = itemView.findViewById(R.id.tvDestination);
+            tvDestination = itemView.findViewById(R.id.tvNameRider);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
-            ibCarImage = itemView.findViewById(R.id.ibCarImage);
+            ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
             ibReserve = itemView.findViewById(R.id.ibReserve);
+
             itemView.setOnClickListener(this);
         }
 
