@@ -27,12 +27,6 @@ import java.util.List;
 final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.ViewHolder> {
     private Context context;
     List<Ride> rides;
-    private TextView tvDestination;
-    private TextView tvDate;
-    private TextView tvTime;
-    private TextView tvSeats;
-    private ImageButton ibCarImage;
-    private ImageButton ibReserve;
 
     public MyRidesAdapter(final Context context, final List<Ride> rides) {
         this.context = context;
@@ -64,6 +58,13 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView tvDestination;
+        private TextView tvDate;
+        private TextView tvTime;
+        private TextView tvSeats;
+        private ImageButton ibCarImage;
+        private ImageButton ibReserve;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDestination = itemView.findViewById(R.id.tvNameRider);
