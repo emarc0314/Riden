@@ -345,15 +345,27 @@ public class AddRideFragment extends Fragment {
                 pickupLocation = new MarkerOptions().position(new LatLng(pickupLat, pickupLong)).title("Pickup Location");
                 destinationLocation = new MarkerOptions().position(new LatLng(destinationLat, destinationLong)).title("Destination Location");
 
+
+
                 float[] results = new float[1];
                 Location.distanceBetween(pickupLat, pickupLong, destinationLat, destinationLong, results);
+//                Location.
                 /** CALCULATION FOR PRICE
                  * - adding a profit multiplier
                  * - add a higher multiplier if it is evening or day
+                 * - add a time to take a ride
+                 * - too early in the morning, classes, charge more for that
+                 * -
+                 * - tolls on the road; using google maps api
+                 * - how many people are going with you on the ride
+                 * - decrease price as more poeple join the ride
+                 * - type of car - optional
+                 * - if there is no ride already available and you request a ride, it costs more
                  * - counting the number of states crossed and multiply the price by that
                  * - counting tolls on the way from point A to B (maybe use api for this)
                  * - stretch goal - adding spotify
                  */
+
                 float price = (float) (results[0] * 0.585/1609);
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
                 String priceShown = formatter.format(price);
