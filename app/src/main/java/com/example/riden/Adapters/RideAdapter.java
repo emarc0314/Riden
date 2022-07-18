@@ -2,6 +2,7 @@ package com.example.riden.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,22 +18,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
 import com.example.riden.activities.RideDetailActivity;
-import com.example.riden.fragments.RidesFragment;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
+//import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+//import com.google.android.libraries.places.api.model.Place;
 import com.parse.ParseFile;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements Filterable {
     private Context context;
     private List<Ride> rides;
     private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
+    private MarkerOptions rideDestination, searchDestination;
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
         this.context = context;
@@ -118,7 +135,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     }
 
     Filter geoFilter = new Filter() {
-
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             return null;
@@ -163,14 +179,80 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         protected void publishResults(CharSequence constraint, FilterResults results) {
             rides.clear();
             Log.i("I", "am being claled");
-            rides.addAll((ArrayList<Ride>) results.values);
+            if(!((ArrayList<Ride>) results.values).isEmpty()) {
+                rides.addAll((ArrayList<Ride>) results.values);
+            }
+            else {
+                OkHttpClient client = new OkHttpClient().newBuilder()
+                        .build();
 
+                MediaType mediaType = MediaType.parse("text/plain");
+//                RequestBody body = RequestBody.create(mediaType, "");
+
+                String query = constraint.toString();
+                HttpUrl mySearchUrl = new HttpUrl.Builder()
+                        .scheme("https")
+                        .host("www.googleapis.com")
+                        .addPathSegment("maps/api/place")
+                        .addPathSegment("textsearch")
+                        .addQueryParameter("query", "Seattle")
+                        .build();
+
+                Request request = new Request.Builder()
+//                        .url(mySearchUrl)
+                        .addHeader("Accept", "application/json")
+                        .url("https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=AIzaSyDOq21Q5z74O_Rndgp-wwg4PdoKyi9zUIA")
+                        .method("GET", null)
+                        .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            if (!response.isSuccessful()) {
+                                throw new IOException("Unexpected code " + response);
+                            }
+                            else {
+                                String output = response.body().string();
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(output);
+                                    JSONArray results = jsonResponse.getJSONArray("results");
+
+                                    if (results != null) {
+                                        JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
+                                        JSONObject location = geometry.getJSONObject("location");
+                                        Double lat = location.getDouble("lat");
+                                        Double lng = location.getDouble("lng");
+
+//                                        searchDestination = new MarkerOptions().position(new LatLng(lat, lng)).title("searchDestination");
+
+                                        for(Ride ride: allRides) {
+//                                            rideDestination = new MarkerOptions().position(new LatLng(ride.getDestinationLat(), ride.getDestinationLong())).title("rideDestination");
+                                            float[] distanceBetween = new float[1];
+                                            Location.distanceBetween(lat, lng, ride.getDestinationLat(), ride.getDestinationLong(), distanceBetween);
+                                            float miles = distanceBetween[0]/1609;
+                                            if(miles < 20) {
+                                                rides.add(ride);
+                                            }
+                                        }
+                                    }
+                                    Log.i("a_new_response", jsonResponse.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+            }
 
             for (Ride ride : rides) {
                 Log.i("rides_filter", ride.getDestinationAddress());
             }
             notifyItemRangeChanged(0,rides.size());
-
             notifyDataSetChanged();
         }
     };

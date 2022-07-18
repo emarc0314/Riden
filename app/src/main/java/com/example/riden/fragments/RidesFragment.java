@@ -61,9 +61,7 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         ArrayAdapter<CharSequence> milesAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.miles, android.R.layout.simple_spinner_dropdown_item);
         milesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-//                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spMiles.setAdapter(milesAdapter);
-//            spMiles.setOnItemClickListener(view);
         spMiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
