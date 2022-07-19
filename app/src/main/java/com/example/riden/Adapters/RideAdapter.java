@@ -46,7 +46,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     private List<Ride> rides;
     private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
-    private int radiusMiles = 10;
+    private int radiusMiles = 20;
 
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
