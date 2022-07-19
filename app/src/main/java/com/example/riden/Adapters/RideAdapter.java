@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -33,13 +34,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -49,7 +46,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     private List<Ride> rides;
     private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
-    private MarkerOptions rideDestination, searchDestination;
+    private int radiusMiles = 10;
+
 
     public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
         this.context = context;
@@ -61,6 +59,11 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         List<Ride> copyArrayofList = new ArrayList<Ride>(originalArrayList.size());
         for (Ride item : originalArrayList) copyArrayofList.add(item);
         return copyArrayofList;
+    }
+
+    public void updateMileRadius(int radiusMiles) {
+        this.radiusMiles = radiusMiles;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -114,7 +117,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 user.saveInBackground();
             }
         });
-
     }
 
     @Override
@@ -159,7 +161,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Ride> filteredList = new ArrayList<>();
-            if (constraint.toString().isEmpty()) {
+            if (constraint == null || constraint.toString().isEmpty()) {
                 filteredList.addAll(allRides);
             }
             else {
@@ -177,85 +179,82 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            rides.clear();
-            Log.i("I", "am being claled");
-            if(!((ArrayList<Ride>) results.values).isEmpty()) {
-                rides.addAll((ArrayList<Ride>) results.values);
+            if(constraint.toString().isEmpty()) {
+                rides.clear();
+                rides.addAll(allRides);
+                notifyDataSetChanged();
             }
             else {
-                OkHttpClient client = new OkHttpClient().newBuilder()
-                        .build();
-
-                MediaType mediaType = MediaType.parse("text/plain");
-//                RequestBody body = RequestBody.create(mediaType, "");
-
-                String query = constraint.toString();
-                HttpUrl mySearchUrl = new HttpUrl.Builder()
-                        .scheme("https")
-                        .host("www.googleapis.com")
-                        .addPathSegment("maps/api/place")
-                        .addPathSegment("textsearch")
-                        .addQueryParameter("query", "Seattle")
-                        .build();
-
-                Request request = new Request.Builder()
-//                        .url(mySearchUrl)
-                        .addHeader("Accept", "application/json")
-                        .url("https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=AIzaSyDOq21Q5z74O_Rndgp-wwg4PdoKyi9zUIA")
-                        .method("GET", null)
-                        .build();
-
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, final Response response) throws IOException {
-                            if (!response.isSuccessful()) {
-                                throw new IOException("Unexpected code " + response);
-                            }
-                            else {
-                                String output = response.body().string();
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(output);
-                                    JSONArray results = jsonResponse.getJSONArray("results");
-
-                                    if (results != null) {
-                                        JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
-                                        JSONObject location = geometry.getJSONObject("location");
-                                        Double lat = location.getDouble("lat");
-                                        Double lng = location.getDouble("lng");
-
-//                                        searchDestination = new MarkerOptions().position(new LatLng(lat, lng)).title("searchDestination");
-
-                                        for(Ride ride: allRides) {
-//                                            rideDestination = new MarkerOptions().position(new LatLng(ride.getDestinationLat(), ride.getDestinationLong())).title("rideDestination");
-                                            float[] distanceBetween = new float[1];
-                                            Location.distanceBetween(lat, lng, ride.getDestinationLat(), ride.getDestinationLong(), distanceBetween);
-                                            float miles = distanceBetween[0]/1609;
-                                            if(miles < 20) {
-                                                rides.add(ride);
-                                            }
-                                        }
-                                    }
-                                    Log.i("a_new_response", jsonResponse.toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
+                if (!((ArrayList<Ride>) results.values).isEmpty()) {
+                    rides.clear();
+                    rides.addAll((ArrayList<Ride>) results.values);
+                    notifyDataSetChanged();
+                }
+                else {
+                    callToGoogleMapsSearch(constraint.toString());
+                }
             }
-
-            for (Ride ride : rides) {
-                Log.i("rides_filter", ride.getDestinationAddress());
-            }
-            notifyItemRangeChanged(0,rides.size());
-            notifyDataSetChanged();
         }
     };
+
+    public void callToGoogleMapsSearch(String query) {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        String urlBeforeQuery = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=";
+
+        Request request = new Request.Builder()
+                .addHeader("Accept", "application/json")
+                .url(urlBeforeQuery + query + "&key=" + context.getString(R.string.google_maps_api_key))
+                .method("GET", null)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                else {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+                        JSONArray results = jsonResponse.getJSONArray("results");
+
+                        if (results != null) {
+                            rides.clear();
+                            JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
+                            JSONObject location = geometry.getJSONObject("location");
+                            Double lat = location.getDouble("lat");
+                            Double lng = location.getDouble("lng");
+
+                            for(Ride ride: allRides) {
+                                float[] distanceBetween = new float[1];
+                                Location.distanceBetween(lat, lng, ride.getDestinationLat(), ride.getDestinationLong(), distanceBetween);
+                                float miles = distanceBetween[0]/1609;
+                                if(miles < radiusMiles) {
+                                    rides.add(ride);
+                                }
+                            }
+                            ((AppCompatActivity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+//                                    notifyItemRangeChanged(0,rides.size());
+                                    notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 
     public void clear() {
         rides.clear();

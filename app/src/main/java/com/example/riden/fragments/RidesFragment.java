@@ -68,8 +68,8 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                 String text = parent.getItemAtPosition(position).toString();
                 if(!text.equals("None")) {
                     int miles = Integer.valueOf(text);
+                    adapter.updateMileRadius(miles);
                     //call funciton to filter cells based on the location they searched
-
                 }
                 Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             }
@@ -93,7 +93,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
 //                adapter.getSpecificFilter("").filter(newText);
 
 //                adapter.getFilter().filter(newText);
-
                 return false;
             }
         });
