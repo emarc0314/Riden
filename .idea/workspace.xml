@@ -15,19 +15,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8c7c6d2e-c721-4962-9612-7c2577726291" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/activities/helpers/Spelling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetDropDown.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/RideAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/Adapters/RideAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riden/activities/RideDetailActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/activities/RideDetailActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/RidesFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/RidesFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riden/models/Ride.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/models/Ride.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/AddRideFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riden/fragments/AddRideFragment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/elvismarcelo/.android/avd/Pixel_4a_API_32.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/elvismarcelo/.android/avd/Pixel_5_API_32.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

@@ -49,8 +49,10 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.parse.DeleteCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -99,6 +101,7 @@ public class AddRideFragment extends Fragment {
 
     MarkerOptions pickupLocation, destinationLocation;
     private User user = (User) User.getCurrentUser();
+    private ArrayList<Ride> rides;
     ParseFile image;
     boolean pickup = false;
 
@@ -120,6 +123,33 @@ public class AddRideFragment extends Fragment {
             stateCode = matcher.group().trim();
 
         return stateCode;
+    }
+
+    private void queryRides() {
+        // specify what type of data we want to query - Post.class
+        ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+        query.setLimit(20);
+        query.addAscendingOrder("numberSeats");
+        query.findInBackground(new FindCallback<Ride>() {
+            @Override
+            public void done(List<Ride> theseRides, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting rides", e);
+                    return;
+                }
+
+                for (Ride ride : rides) {
+                    Log.i(TAG, "ride " + ride.getDriver());
+                }
+                for(Ride ride: theseRides) {
+                    if(ride.getSeats() > 0) {
+                        rides.add(ride);
+                    }
+                }
+//                rides.addAll(theseRides);
+//                allRides.addAll(theseRides);
+            }
+        });
     }
 
     private void saveRide(String cityPickup, String statePickup, String cityDestination, String stateDestination, String departureDate, String seats, ParseFile image, String price) {
@@ -196,6 +226,8 @@ public class AddRideFragment extends Fragment {
         etNumberSeats = view.findViewById(R.id.etNumberSeats);
         etPrice = view.findViewById(R.id.etPrice);
         tvCalendarInput.setText(getTodaysDate());
+
+        queryRides();
 
         ibCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,6 +398,33 @@ public class AddRideFragment extends Fragment {
                  * - stretch goal - adding spotify
                  */
 
+//                if()
+                //find however many rides are going in that direction
+                //if there's multiple rides that share that destination, then increase the multiplier by .2
+
+                //starts at double the price
+                float sharedCarsMultiplier = 1F;
+//                1/1.2;
+//
+//                if(time of day < 11am && ) {
+//                    1.5 times price
+//                }
+
+
+                for(Ride ride: rides) {
+                    float[] distanceBetween = new float[1];
+                    Location.distanceBetween(destinationLat, destinationLong, ride.getDestinationLat(), ride.getDestinationLong(), distanceBetween);
+                    float miles = distanceBetween[0]/1609;
+                    if(miles < 10) {
+                        sharedCarsMultiplier += sharedCarsMultiplier * 0.1F;
+                    }
+                }
+
+//                1/sharedCarsMultiplier;
+
+
+
+
                 float price = (float) (results[0] * 0.585/1609);
                 NumberFormat formatter = NumberFormat.getCurrencyInstance();
                 String priceShown = formatter.format(price);
@@ -373,6 +432,7 @@ public class AddRideFragment extends Fragment {
                 Log.i("distance", String.valueOf(results[0]));
             }
         }
+
         else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
