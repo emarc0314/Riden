@@ -127,7 +127,6 @@ public class AddRideFragment extends Fragment {
         // specify what type of data we want to query - Post.class
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.setLimit(20);
-//        query.addAscendingOrder("numberSeats");
         query.findInBackground(new FindCallback<Ride>() {
             @Override
             public void done(List<Ride> theseRides, ParseException e) {
@@ -173,7 +172,6 @@ public class AddRideFragment extends Fragment {
                 Toast.makeText(getContext(), "Successfully Added a Ride!", Toast.LENGTH_SHORT).show();
             }
         });
-
         user.addMyOfferedRide(ride);
         user.saveInBackground();
     }
