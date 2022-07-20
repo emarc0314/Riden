@@ -102,22 +102,18 @@ public class Ride extends ParseObject {
 
     public List<User> getReservees() {
         List<User> reservees = getList(USERS_RESERVED_KEY);
-        return reservees;
-    }
-
-    public List<String> getReserveesString() {
-        List<User> reservees = getList(USERS_RESERVED_KEY);
         ArrayList<String> usernames = new ArrayList<>();
-
-        for (User reservee: reservees) {
-            reservee.getUsername();
-        }
-        return usernames;
+//
+//        for (User reservee: reservees) {
+//            reservee.getUsername();
+//        }
+        return reservees;
     }
 
     public void addReservee(User user) {
         addUnique(USERS_RESERVED_KEY, user);
     }
+
     public void removeReservee(User user) {
         ArrayList<User> userList = new ArrayList<>();
         userList.add(user);

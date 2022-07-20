@@ -61,17 +61,15 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         ArrayAdapter<CharSequence> milesAdapter = ArrayAdapter.createFromResource(view.getContext(), R.array.miles, android.R.layout.simple_spinner_dropdown_item);
         milesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-//                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spMiles.setAdapter(milesAdapter);
-//            spMiles.setOnItemClickListener(view);
         spMiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String text = parent.getItemAtPosition(position).toString();
                 if(!text.equals("None")) {
                     int miles = Integer.valueOf(text);
+                    adapter.updateMileRadius(miles);
                     //call funciton to filter cells based on the location they searched
-
                 }
                 Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             }
@@ -95,7 +93,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
 //                adapter.getSpecificFilter("").filter(newText);
 
 //                adapter.getFilter().filter(newText);
-
                 return false;
             }
         });

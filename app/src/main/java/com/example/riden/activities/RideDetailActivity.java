@@ -126,10 +126,10 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
             btReserve.setVisibility(View.GONE);
 
             riders = new ArrayList<>();
+            riders.addAll(ride.getReservees());
             adapter = new RidersAdapter(this, riders);
             rvRiders.setAdapter(adapter);
             rvRiders.setLayoutManager(new LinearLayoutManager(this));
-            riders.addAll(ride.getReservees());
             adapter.notifyDataSetChanged();
 
             enableSwipeToDeleteAndUndo();
@@ -138,7 +138,6 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         else {
             rvRiders.setVisibility(View.GONE);
         }
-
 
         pickupLocation = new MarkerOptions().position(new LatLng(ride.getPickupLat(), ride.getPickupLong())).title("Pickup Location");
         destinationLocation = new MarkerOptions().position(new LatLng(ride.getDestinationLat(), ride.getDestinationLong())).title("Destination Location");
