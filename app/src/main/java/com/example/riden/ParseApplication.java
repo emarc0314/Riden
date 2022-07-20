@@ -7,6 +7,8 @@ import com.example.riden.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import java.util.Map;
+
 public class ParseApplication extends Application {
 
     @Override
