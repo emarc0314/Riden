@@ -46,6 +46,7 @@ import com.parse.SaveCallback;
 import org.w3c.dom.Text;
 
 import java.sql.Array;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 //import com.thecodecity;
@@ -133,7 +134,6 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
             adapter.notifyDataSetChanged();
 
             enableSwipeToDeleteAndUndo();
-            //TODO: set field to be none
         }
         else {
             rvRiders.setVisibility(View.GONE);
@@ -153,6 +153,8 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 if(reserved) {
                     currentUser.removeRide(ride);
                     ride.setSeats(ride.getSeats() + 1);
+
+//                    ride.setPrice();
                     ride.removeReservee(currentUser);
                     btReserve.setText("Reserve");
 
@@ -180,22 +182,25 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         tvDepartureDate.setText(ride.getFullDate());
         tvPickupAddress.setText(ride.getPickupAddress());
         tvDestinationAddress.setText(ride.getDestinationAddress());
-        tvPrice.setText(ride.getPrice());
+
+        int reservedRides;
+        if(ride.getReservees().isEmpty()) {
+            reservedRides = 1;
+        }
+        else {
+            reservedRides = ride.getReservees().size();
+        }
+
+        float totalPrice = Float.valueOf(ride.getPrice().substring(1).replace(",",""))/reservedRides;
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String totalProfitDollar = formatter.format(totalPrice);
+
+        tvPrice.setText(totalProfitDollar);
 
         Glide.with(this).load(driver.getProfileImage().getUrl()).into(ibDriverProfileDetail);
         Glide.with(this).load(driver.getCarImage().getUrl()).into(ibDriverCarDetail);
     }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        if(isDriver) {
-//            adapter.clear();
-//            riders.addAll(ride.getReservees());
-//        }
-//
-////        rides.addAll(user.getMyRides());
-//    }
 
     private void enableSwipeToDeleteAndUndo() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
@@ -206,7 +211,6 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 adapter.removeItem(position);
                 rider.removeRide(ride);
                 ride.removeReservee(rider);
-
 //                rider.removeRide(ride);
 
                 Snackbar snackbar = Snackbar
@@ -220,8 +224,6 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                         rider.addRide(ride);
                     }
                 });
-
-
 
                 rider.saveInBackground(new SaveCallback() {
                     @Override
