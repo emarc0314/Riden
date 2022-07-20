@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,10 +13,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -32,6 +35,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.riden.R;
@@ -53,10 +57,15 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -67,8 +76,11 @@ public class AddRideFragment extends Fragment {
     private EditText etPickupLocation;
     private EditText etDestination;
     private ImageButton ibCalendar;
+    private ImageButton ibClock;
+
     private TextView tvCalendarInput;
     private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
     private Button btAddRide;
     private ImageButton ibUploadCarImage;
     private EditText etNumberSeats;
@@ -87,6 +99,7 @@ public class AddRideFragment extends Fragment {
     public String cityDestination;
     public String stateDestination;
     public String departureDate;
+    public String departureTime;
     public String seats = "";
 
     public String fullDate;
@@ -237,20 +250,23 @@ public class AddRideFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initDatePicker();
+        initTimePicker();
         etPickupLocation = view.findViewById(R.id.etPickupLocation);
         etDestination = view.findViewById(R.id.etDestination);
         ibCalendar = view.findViewById(R.id.ibCalendar);
+        ibClock = view.findViewById(R.id.ibClock);
+        tvDepartureTime = view.findViewById(R.id.tvDepartureTime);
         tvCalendarInput = view.findViewById(R.id.tvCalendarInput);
         btAddRide = view.findViewById(R.id.btAddRide);
         ibUploadCarImage = view.findViewById(R.id.ibUploadCarImage);
         etNumberSeats = view.findViewById(R.id.etNumberSeats);
-        tvDepartureTime = view.findViewById(R.id.tvDepartureTime);
         tvCalendarInput.setText(getTodaysDate());
 
         etGasProfit = view.findViewById(R.id.etGas);
         etSeatProfit = view.findViewById(R.id.etProfitFromSeats);
         etMiscProfit = view.findViewById(R.id.etMiscCosts);
         etPrice = view.findViewById(R.id.etPrice);
+
 
         Places.initialize(view.getContext(), getString(R.string.google_maps_api_key));
         queryRides();
@@ -291,6 +307,13 @@ public class AddRideFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 datePickerDialog.show();
+            }
+        });
+
+        ibClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePickerDialog.show();
             }
         });
 
@@ -342,12 +365,71 @@ public class AddRideFragment extends Fragment {
         return makeDateString(day, month, year);
     }
 
+    private void initTimePicker() {
+        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String hourText;
+                String minuteText;
+                if (hourOfDay < 10) {
+                    hourText = "0" + String.valueOf(hourOfDay);
+                }
+                else {
+                    hourText = String.valueOf(hourOfDay);
+                }
+                if(minute < 10) {
+                    minuteText = "0" + String.valueOf(minute);
+                }
+                else {
+                    minuteText = String.valueOf(minute);
+                }
+                LocalTime time = LocalTime.parse(hourText + minuteText, DateTimeFormatter.ofPattern("HHmm"));
+                String formattedTime = time.format(DateTimeFormatter.ofPattern("hh:mm a"));
+                tvDepartureTime.setText(formattedTime);
+
+                String miscProfit = etMiscProfit.getText().toString();
+                float addMiscProfit;
+                if(miscProfit == null || miscProfit.isEmpty()) {
+                    addMiscProfit = 0;
+                }
+                else {
+                    addMiscProfit = Float.valueOf(miscProfit.substring(1).replace(",",""));
+                }
+
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+
+                try {
+                    Date day = sdf.parse("9:00 AM");
+                    Date night = sdf.parse("9:00 PM");
+                    Date userDate = sdf.parse(formattedTime);
+
+                    if(userDate.before(day) || userDate.after(night)) {
+                        addMiscProfit = (float) (addMiscProfit * 1.5);
+                    }
+
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+
+                NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                String totalMiscDollar = formatter.format(addMiscProfit);
+
+                calculatePrice(etGasProfit.getText().toString(), etSeatProfit.getText().toString(), totalMiscDollar);
+                departureTime = formattedTime;
+            }
+        };
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+        timePickerDialog = new TimePickerDialog(getContext(), timeSetListener, hour, min , false);
+    }
+
     private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
-
                 String date = makeDateString(dayOfMonth, month, year);
                 fullDate = getMonthFormat(month) + " " + dayOfMonth + ", " + year;
                 departureDate = getMonthFormat(month) + " " + dayOfMonth;
@@ -455,11 +537,6 @@ public class AddRideFragment extends Fragment {
                  * - stretch goal - adding spotify
                  */
 
-//                if()
-                //find however many rides are going in that direction
-                //if there's multiple rides that share that destination, then increase the multiplier by .2
-
-                //starts at double the price
                 float sharedCarsMultiplier = 1F;
 
                 for(Ride ride: rides) {
@@ -471,7 +548,6 @@ public class AddRideFragment extends Fragment {
                     }
                 }
 
-
                 float profitGas = (float) (results[0] * 0.585/1609);
                 float profitSeats;
                 //2 dollar profit per seat available
@@ -482,9 +558,8 @@ public class AddRideFragment extends Fragment {
                     profitSeats = Integer.valueOf(seats) * 2;
                 }
 
-                //check to see if day or night
-//                if(tvDepartureTime.getText().toString())
                 float timeOfDayCost = 2;
+
                 float miscProfit = (float) profitGas*(sharedCarsMultiplier - 1) + timeOfDayCost;
                 float price = profitGas + profitSeats + miscProfit;
 
