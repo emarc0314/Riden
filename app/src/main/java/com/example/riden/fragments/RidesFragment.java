@@ -80,7 +80,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -90,9 +89,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-//                adapter.getSpecificFilter("").filter(newText);
-
-//                adapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -107,7 +103,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         super.onResume();
 //        adapter.clear();
 //        queryRides();
-
     }
 
     private void queryRides() {
@@ -132,11 +127,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                         allRides.add(ride);
                     }
                 }
-
-//                rides.addAll(theseRides);
-//                allRides.addAll(theseRides);
-
-
                 adapter.notifyDataSetChanged();
             }
         });
