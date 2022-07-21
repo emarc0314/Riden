@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.riden.R;
 import com.example.riden.activities.RideDetailActivity;
+import com.example.riden.activities.helpers.Trie;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 //import com.google.android.gms.location.places.Place;
@@ -47,18 +48,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
     private final List<Ride> allRides;
     private User user = (User) User.getCurrentUser();
     private int radiusMiles = 20;
+    private Trie rideTrie;
 
-
-    public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides) {
+    public RideAdapter(Context context, List<Ride> rides, List<Ride> allRides, Trie rideTrie) {
         this.context = context;
         this.rides = rides;
         this.allRides = allRides;
-    }
-
-    public static List<Ride> cloneList(List<Ride> originalArrayList) {
-        List<Ride> copyArrayofList = new ArrayList<Ride>(originalArrayList.size());
-        for (Ride item : originalArrayList) copyArrayofList.add(item);
-        return copyArrayofList;
+        this.rideTrie = rideTrie;
     }
 
     public void updateMileRadius(int radiusMiles) {
@@ -165,15 +161,15 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 filteredList.addAll(allRides);
             }
             else {
-                for (Ride ride: allRides) {
-                    if(ride.getDestinationAddress().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        filteredList.add(ride);
-                        Log.i("filter", ride.getDestinationAddress());
-                    }
+                String searchString = constraint.toString();
+                if(searchString.indexOf(" ") == -1 && !(Character.isDigit(searchString.charAt(0)))) {
+                    filteredList = rideTrie.findTrieRides(constraint.toString().toLowerCase());
                 }
             }
+
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredList;
+
             return filterResults;
         }
 
@@ -243,7 +239,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                             ((AppCompatActivity) context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-//                                    notifyItemRangeChanged(0,rides.size());
                                     notifyDataSetChanged();
                                 }
                             });
