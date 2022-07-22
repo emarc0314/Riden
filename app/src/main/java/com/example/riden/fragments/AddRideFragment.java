@@ -221,21 +221,21 @@ public class AddRideFragment extends Fragment {
             gasProfit = 0;
         }
         else {
-            gasProfit = Float.valueOf(gasProfitDollar.substring(1));
+            gasProfit = Float.valueOf(gasProfitDollar.substring(1).replace(",",""));
         }
 
         if (seatProfitDollar == null || seatProfitDollar.isEmpty()) {
             seatProfit = 0;
         }
         else {
-            seatProfit = Float.valueOf(seatProfitDollar.substring(1));
+            seatProfit = Float.valueOf(seatProfitDollar.substring(1).replace(",",""));
         }
 
         if (miscProfitDollar == null || miscProfitDollar.isEmpty()) {
             miscProfit = 0;
         }
         else {
-            miscProfit = Float.valueOf(miscProfitDollar.substring(1));
+            miscProfit = Float.valueOf(miscProfitDollar.substring(1).replace(",",""));
 
         }
         float totalProfit = gasProfit + seatProfit + miscProfit;
