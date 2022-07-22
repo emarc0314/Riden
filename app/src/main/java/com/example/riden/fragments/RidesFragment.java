@@ -97,7 +97,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 String autoCorrect = getAutoCorrect(newText);
                 adapter.getFilter().filter(autoCorrect);
                 return false;

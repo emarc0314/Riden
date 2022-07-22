@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -157,14 +158,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Ride> filteredList = new ArrayList<>();
+
             if (constraint == null || constraint.toString().isEmpty()) {
                 filteredList.addAll(allRides);
             }
             else {
-                String searchString = constraint.toString();
-                if(searchString.indexOf(" ") == -1 && !(Character.isDigit(searchString.charAt(0)))) {
-                    filteredList = rideTrie.findTrieRides(constraint.toString().toLowerCase());
-                }
+                String filteredString = constraint.toString().toLowerCase().replace(" ","");
+                filteredList = rideTrie.findTrieRides(filteredString);
             }
 
             FilterResults filterResults = new FilterResults();

@@ -11,25 +11,22 @@ public class Trie {
     private Ride ride;
 
     public Trie() {
-        children = new Trie[26];
+        //make 255
+        children = new Trie[255];
         ride = null;
         isEndOfWord = false;
     }
 
     public void insert(Ride ride) {
         String city = ride.getCityDestination();
-        if(city.indexOf(' ') != -1) {
-            city = city.substring(0, city.indexOf(' '));
-        }
-
-        city = city.toLowerCase();
+        city = city.toLowerCase().replace(" ", "");
 
         Trie curr = this;
         for (char c : city.toCharArray()) {
-            if (curr.children[c - 'a'] == null) {
-                curr.children[c - 'a'] = new Trie();
+            if (curr.children[c] == null) {
+                curr.children[c] = new Trie();
             }
-            curr = curr.children[c - 'a'];
+            curr = curr.children[c];
         }
         curr.isEndOfWord = true;
         curr.ride = ride;
@@ -39,7 +36,7 @@ public class Trie {
         List<Ride> rides;
         Trie curr = this;
         for (char c : search.toCharArray()) {
-            curr = curr.children[c - 'a'];
+            curr = curr.children[c];
             if (curr == null) {
                 return new ArrayList<>();
             }
@@ -71,8 +68,5 @@ public class Trie {
         List<Ride> rides = new ArrayList<>();
         findAllRides(root, rides);
         return rides;
-    }
-
-    public static void dfs(Trie list[], char c, int arrival) {
     }
 }
