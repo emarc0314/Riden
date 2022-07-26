@@ -77,7 +77,6 @@ public class AddRideFragment extends Fragment {
     private EditText etDestination;
     private ImageButton ibCalendar;
     private ImageButton ibClock;
-
     private TextView tvCalendarInput;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -85,30 +84,27 @@ public class AddRideFragment extends Fragment {
     private ImageButton ibUploadCarImage;
     private EditText etNumberSeats;
     private EditText etPrice;
-    public File photoFile;
-    public EditText etGasProfit;
-    public EditText etSeatProfit;
-    public EditText etMiscProfit;
-    public TextView tvDepartureTime;
-
-    public String photoFileName = "photo.jpg";
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-
-    public String cityPickup;
-    public String statePickup;
-    public String cityDestination;
-    public String stateDestination;
-    public String departureDate;
-    public String departureTime;
-    public String seats = "";
-
-    public String fullDate;
-    public String pickupAddress;
-    public String destinationAddress;
-    public Double pickupLat;
-    public Double pickupLong;
-    public Double destinationLat;
-    public Double destinationLong;
+    private File photoFile;
+    private EditText etGasProfit;
+    private EditText etSeatProfit;
+    private EditText etMiscProfit;
+    private TextView tvDepartureTime;
+    private String photoFileName = "photo.jpg";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    private String cityPickup;
+    private String statePickup;
+    private String cityDestination;
+    private String stateDestination;
+    private String departureDate;
+    private String departureTime;
+    private String seats = "";
+    private String fullDate;
+    private String pickupAddress;
+    private String destinationAddress;
+    private Double pickupLat;
+    private Double pickupLong;
+    private Double destinationLat;
+    private Double destinationLong;
 
     MarkerOptions pickupLocation, destinationLocation;
     private User user = (User) User.getCurrentUser();
@@ -137,10 +133,8 @@ public class AddRideFragment extends Fragment {
     }
 
     private void queryRides() {
-        // specify what type of data we want to query - Post.class
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.setLimit(20);
-//        query.addAscendingOrder("numberSeats");
         query.findInBackground(new FindCallback<Ride>() {
             @Override
             public void done(List<Ride> theseRides, ParseException e) {
@@ -174,6 +168,7 @@ public class AddRideFragment extends Fragment {
         ride.setDestinationLat(destinationLat);
         ride.setDestinationAddress(destinationAddress);
         ride.setPickupAddress(pickupAddress);
+        ride.setDepartureTime(departureTime);
 
         ride.saveInBackground(new SaveCallback() {
             @Override
@@ -186,7 +181,6 @@ public class AddRideFragment extends Fragment {
                 Toast.makeText(getContext(), "Successfully Added a Ride!", Toast.LENGTH_SHORT).show();
             }
         });
-
         user.addMyOfferedRide(ride);
         user.saveInBackground();
     }
@@ -244,6 +238,7 @@ public class AddRideFragment extends Fragment {
         String totalProfitDollar = formatter.format(totalProfit);
 
         etPrice.setText(totalProfitDollar);
+        etPrice.setText(totalProfitDollar);
     }
 
     @Override
@@ -261,12 +256,10 @@ public class AddRideFragment extends Fragment {
         ibUploadCarImage = view.findViewById(R.id.ibUploadCarImage);
         etNumberSeats = view.findViewById(R.id.etNumberSeats);
         tvCalendarInput.setText(getTodaysDate());
-
         etGasProfit = view.findViewById(R.id.etGas);
         etSeatProfit = view.findViewById(R.id.etProfitFromSeats);
         etMiscProfit = view.findViewById(R.id.etMiscCosts);
         etPrice = view.findViewById(R.id.etPrice);
-
 
         Places.initialize(view.getContext(), getString(R.string.google_maps_api_key));
         queryRides();
@@ -386,6 +379,7 @@ public class AddRideFragment extends Fragment {
                 }
                 LocalTime time = LocalTime.parse(hourText + minuteText, DateTimeFormatter.ofPattern("HHmm"));
                 String formattedTime = time.format(DateTimeFormatter.ofPattern("hh:mm a"));
+                departureTime = formattedTime;
                 tvDepartureTime.setText(formattedTime);
 
                 String miscProfit = etMiscProfit.getText().toString();
@@ -401,6 +395,7 @@ public class AddRideFragment extends Fragment {
 
                 try {
                     Date day = sdf.parse("9:00 AM");
+                    day.getHours();
                     Date night = sdf.parse("9:00 PM");
                     Date userDate = sdf.parse(formattedTime);
 
@@ -416,7 +411,6 @@ public class AddRideFragment extends Fragment {
                 String totalMiscDollar = formatter.format(addMiscProfit);
 
                 calculatePrice(etGasProfit.getText().toString(), etSeatProfit.getText().toString(), totalMiscDollar);
-                departureTime = formattedTime;
             }
         };
         Calendar cal = Calendar.getInstance();
@@ -433,6 +427,7 @@ public class AddRideFragment extends Fragment {
                 String date = makeDateString(dayOfMonth, month, year);
                 fullDate = getMonthFormat(month) + " " + dayOfMonth + ", " + year;
                 departureDate = getMonthFormat(month) + " " + dayOfMonth;
+
                 tvCalendarInput.setText(date);
             }
         };
@@ -451,29 +446,29 @@ public class AddRideFragment extends Fragment {
 
     private String getMonthFormat(int month) {
         if(month == 1)
-            return "JAN";
+            return "Jan";
         if(month == 2)
-            return "FEB";
+            return "Feb";
         if(month == 3)
-            return "MAR";
+            return "Mar";
         if(month == 4)
-            return "APR";
+            return "Apr";
         if(month == 5)
-            return "MAY";
+            return "May";
         if(month == 6)
-            return "JUN";
+            return "Jun";
         if(month == 7)
-            return "JUL";
+            return "Jul";
         if(month == 8)
-            return "AUG";
+            return "Aug";
         if(month == 9)
-            return "SEP";
+            return "Sep";
         if(month == 10)
-            return "OCT";
+            return "Oct";
         if(month == 11)
-            return "NOV";
+            return "Nov";
         if(month == 12)
-            return "DEC";
+            return "Dec";
         return "NUL";
     }
 
@@ -550,7 +545,6 @@ public class AddRideFragment extends Fragment {
 
                 float profitGas = (float) (results[0] * 0.585/1609);
                 float profitSeats;
-                //2 dollar profit per seat available
                 if(seats == null || seats.isEmpty()) {
                     profitSeats = 0;
                 }

@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
+
 android {
     compileSdk 32
 
@@ -15,6 +18,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,6 +33,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
@@ -48,10 +56,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.google.code.gson:gson:2.8.7'
 
-    implementation 'com.android.support:design:28.0.0-rc01'
     // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
-
-
+    // Don't forget to change the line below with the latest versions of Firebase SDKs
+    implementation platform('com.google.firebase:firebase-bom:30.3.0')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:4.0.0"//4.0.0
+    implementation "com.github.parse-community.Parse-SDK-Android:bolts-tasks:1.4.03"
 }

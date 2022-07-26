@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.riden.models.Ride;
 import com.example.riden.models.User;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 import java.util.Map;
@@ -21,7 +22,9 @@ public class ParseApplication extends Application {
                 .applicationId((getString(R.string.parse_application_id)))
                 .clientKey("og3uLay98qgnHYzUlo9ufrCAMd2OdoUOm89ystIi")
                 .server("https://parseapi.back4app.com")
-                .build()
-        );
+                .build());
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", "838802765567");
+        installation.saveInBackground();
     }
 }
