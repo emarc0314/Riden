@@ -1,13 +1,16 @@
 package com.example.riden.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +24,22 @@ import android.widget.Toast;
 
 import com.example.riden.Adapters.RideAdapter;
 import com.example.riden.R;
+import com.example.riden.activities.helpers.Spelling;
+import com.example.riden.activities.helpers.Trie;
 import com.example.riden.models.Ride;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RidesFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private RecyclerView rvRides;
     protected List<Ride> rides;
+    protected Trie ridesTrie = new Trie();
     protected List<Ride> allRides;
     protected RideAdapter adapter;
     private SearchView searchView;
@@ -52,7 +60,7 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         rvRides = view.findViewById(R.id.rvRides);
         rides = new ArrayList<>();
         allRides = new ArrayList<>();
-        adapter = new RideAdapter(getContext(), rides, allRides);
+        adapter = new RideAdapter(getContext(), rides, allRides, ridesTrie);
         searchView = view.findViewById(R.id.searchView);
 
         spMiles = view.findViewById(R.id.spMiles);
@@ -86,9 +94,11 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                 return false;
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                String autoCorrect = getAutoCorrect(newText);
+                adapter.getFilter().filter(autoCorrect);
                 return false;
             }
         });
@@ -98,11 +108,26 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         queryRides();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getAutoCorrect(String input) {
+        String autocorrect;
+
+        try {
+            Path path = Paths.get("big.txt");
+            Spelling spelling = new Spelling(path.toAbsolutePath().toString());
+            autocorrect = spelling.correct("speling");
+            Log.i("stringtesting", autocorrect);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return input;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-//        adapter.clear();
-//        queryRides();
     }
 
     private void queryRides() {
@@ -125,6 +150,7 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                     if(ride.getSeats() > 0) {
                         rides.add(ride);
                         allRides.add(ride);
+                        ridesTrie.insert(ride);
                     }
                 }
                 adapter.notifyDataSetChanged();

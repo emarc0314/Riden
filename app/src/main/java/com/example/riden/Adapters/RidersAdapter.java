@@ -43,7 +43,6 @@ public class RidersAdapter extends RecyclerView.Adapter<RidersAdapter.ViewHolder
 
     public void clear() {
         riders.clear();
-//        rides.clear();
         notifyDataSetChanged();
     }
 
@@ -61,18 +60,11 @@ public class RidersAdapter extends RecyclerView.Adapter<RidersAdapter.ViewHolder
     public void removeItem(int position) {
         User rider = riders.get(position);
         riders.remove(position);
-//        driver.getMyOfferedRides().get();
-//        driver.getride
-        //how to remove the rider from the ride?
-
         notifyItemRemoved(position);
     }
 
     public void restoreItem(User rider, int position) {
-//        riders.add(driver);
         riders.add(position, rider);
-//        notifyDataSetChanged();
-//        notifyItemInserted(position);
     }
 
     public List<User> getData() {

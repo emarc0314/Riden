@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.riden.Adapters.MyRidesAdapter;
+//import com.example.riden.Adapters.MyRidesAdapter;
 import com.example.riden.Adapters.RidersAdapter;
 import com.example.riden.R;
 import com.example.riden.activities.helpers.SwipeToDeleteCallback;
