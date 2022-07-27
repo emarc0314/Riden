@@ -27,34 +27,45 @@
             android:layout_marginTop="0dp"
             tools:context=".fragments.AddRideFragment">
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/etDestination"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPickupLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Pickup Location" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/destination_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:ems="10"
-                android:hint="Enter Destination"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="@+id/etPickupLocation"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="@+id/etPickupLocation"
-                app:layout_constraintTop_toBottomOf="@+id/etPickupLocation" />
 
-            <EditText
-                android:id="@+id/etPickupLocation"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:ems="10"
-                android:hint="Pickup Location"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="@+id/name_text_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/name_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/name_text_input"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Destination Location" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
                 android:id="@+id/etPrice"
@@ -79,7 +90,7 @@
                 android:text="TextView"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ibCalendar"
-                app:layout_constraintEnd_toEndOf="@+id/etDestination"
+                app:layout_constraintEnd_toEndOf="@+id/destination_text_input"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/ibCalendar"
                 app:layout_constraintTop_toTopOf="@+id/ibCalendar" />
@@ -93,7 +104,7 @@
                 android:textAlignment="viewStart"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ibClock"
-                app:layout_constraintEnd_toEndOf="@+id/etDestination"
+                app:layout_constraintEnd_toEndOf="@+id/destination_text_input"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/ibCalendar"
                 app:layout_constraintTop_toTopOf="@+id/ibClock" />
@@ -105,8 +116,8 @@
                 android:layout_marginTop="12dp"
                 android:contentDescription="idk brah"
                 android:src="@android:drawable/ic_menu_my_calendar"
-                app:layout_constraintStart_toStartOf="@+id/etDestination"
-                app:layout_constraintTop_toBottomOf="@+id/etDestination" />
+                app:layout_constraintStart_toStartOf="@+id/destination_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/destination_text_input" />
 
             <ImageButton
                 android:id="@+id/ibClock"
@@ -116,7 +127,7 @@
                 android:layout_marginTop="12dp"
                 android:contentDescription="idk brah"
                 android:src="@android:drawable/ic_menu_my_calendar"
-                app:layout_constraintStart_toStartOf="@+id/etDestination"
+                app:layout_constraintStart_toStartOf="@+id/destination_text_input"
                 app:layout_constraintTop_toBottomOf="@+id/etNumberSeats" />
 
             <EditText

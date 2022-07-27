@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -77,43 +78,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
 
         String objectId = ride.getObjectId();
         List<String> rideObjectIds = user.getRideObjectIds();
-        if(rideObjectIds.contains(objectId)) {
-            holder.ibReserve.setImageResource(R.drawable.car_reserve);
-        }
-        else {
-            holder.ibReserve.setImageResource(R.drawable.car);
-        }
 
         holder.tvSeats.setText(String.valueOf(ride.getSeats()));
-
-        holder.ibReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //add the ride in Rides view to list of myRides
-                Ride ride = rides.get(holder.getAdapterPosition());
-                boolean isReserved = ride.isReserved();
-                holder.ibReserve = v.findViewById(R.id.ibReserve);
-                holder.tvSeats = v.findViewById(R.id.tvSeatsCell);
-
-                if(user.getRideObjectIds().contains(ride.getObjectId())) {
-                    holder.ibReserve.setImageResource(R.drawable.car);
-                    user.removeRide(ride);
-                    ride.removeReservee(user);
-                    ride.setSeats(ride.getSeats()  + 1);
-                }
-                else {
-                    holder.ibReserve.setImageResource(R.drawable.car_reserve);
-                    user.addRide(ride);
-                    ride.addReservee(user);
-                    ride.setSeats(ride.getSeats()  - 1);
-                }
-
-                String seats = String.valueOf(ride.getSeats());
-                ride.setReserved(!isReserved);
-                ride.saveInBackground();
-                user.saveInBackground();
-            }
-        });
     }
 
     @Override
@@ -263,7 +229,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         public TextView tvTime;
         public TextView tvSeats;
         public ImageButton ibCarImage;
-        public ImageButton ibReserve;
+        private TextView tvRidePrice;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -271,7 +238,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTime = itemView.findViewById(R.id.tvTime);
             ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
-            ibReserve = itemView.findViewById(R.id.ibReserve);
+            tvRidePrice = itemView.findViewById(R.id.tvRidePrice);
             tvSeats = itemView.findViewById(R.id.tvSeatsCell);
             itemView.setOnClickListener(this);
         }
@@ -282,6 +249,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             String cityAddress = ride.getDestinationAddress();
             tvDestination.setText(cityDestination + ", " + ride.getStateDestination());
             tvDate.setText(ride.getDepartureDate());
+            tvRidePrice.setText(ride.getPrice());
             ParseFile carImage = ride.getCarImage();
             if (carImage != null) {
                 Glide.with(context).load(carImage.getUrl()).into(ibCarImage);
