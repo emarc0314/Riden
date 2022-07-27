@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "838802765567",
+    "project_id": "riden-push-notifications",
+    "storage_bucket": "riden-push-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838802765567:android:339aba8fea24f26b023eca",
+        "android_client_info": {
+          "package_name": "com.example.riden"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL7peWjvZZPd52pSQq24LYt-F5aLjL8J4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

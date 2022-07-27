@@ -1,28 +1,34 @@
 package com.example.riden.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-//import com.example.riden.Adapters.MyRidesAdapter;
 import com.example.riden.Adapters.RidersAdapter;
 import com.example.riden.R;
+import com.example.riden.activities.helpers.Notification;
 import com.example.riden.activities.helpers.SwipeToDeleteCallback;
 import com.example.riden.activities.helpers.TaskLoadedCallback;
 import com.example.riden.models.Ride;
@@ -40,16 +46,19 @@ import com.example.riden.activities.helpers.FetchURL;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
-import org.w3c.dom.Text;
-
-import java.sql.Array;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-//import com.thecodecity;
+import java.util.Locale;
 
 public class RideDetailActivity extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
     private GoogleMap map;
@@ -63,16 +72,13 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
     private ImageButton ibDriverCarDetail;
     private TextView tvPrice;
     private Button btReserve;
-
     private Ride ride;
     private User driver;
     private User currentUser;
     private Boolean isMyRidesView;
     private User rider;
-
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-
     private ImageView ivProfilePop;
     private TextView tvNamePop;
     private TextView tvPhoneNumberPop;
@@ -80,36 +86,35 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
     private TextView tvMajorPop;
     private ImageView ivCarPop;
     private TextView tvLicensePlatePop;
-
     private Boolean isDriver;
     private RecyclerView rvRiders;
     private List<User> riders;
     private RidersAdapter adapter;
+    private Notification notification = new Notification();
     CoordinatorLayout clCoordinateProfileLayout;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_detail);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFrag);
         mapFragment.getMapAsync(this);
+        currentUser = (User) User.getCurrentUser();
+        ride = getIntent().getParcelableExtra(Ride.class.getSimpleName());
+        driver = (User) ride.getDriver();
+        Boolean reserved = currentUser.getRideObjectIds().contains(ride.getObjectId());
 
         tvPickupAddress = findViewById(R.id.tvPickupAddress);
         tvDestinationAddress = findViewById(R.id.tvDestinationAddress);
         tvDepartureDate = findViewById(R.id.tvDepartureDate);
-        tvDepartureTime = findViewById(R.id.tvDepartureTime);
+        tvDepartureTime = findViewById(R.id.tvDepartureTimeDetail);
         ibDriverProfileDetail = findViewById(R.id.ibDriverProfileDetail);
         ibDriverCarDetail = findViewById(R.id.ibDriverCarDetail);
         tvPrice = findViewById(R.id.tvPrice);
         btReserve = findViewById(R.id.btReserve);
         rvRiders = findViewById(R.id.rvRiders);
         clCoordinateProfileLayout = findViewById(R.id.clCoordinateProfileLayout);
-
-        currentUser = (User) User.getCurrentUser();
-        ride = getIntent().getParcelableExtra(Ride.class.getSimpleName());
-        driver = (User) ride.getDriver();
-
-        Boolean reserved = currentUser.getRideObjectIds().contains(ride.getObjectId());
 
         if(reserved) {
             btReserve.setText("Reserved!");
@@ -125,18 +130,17 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
             ibDriverProfileDetail.setVisibility(View.GONE);
             ibDriverCarDetail.setVisibility(View.GONE);
             btReserve.setVisibility(View.GONE);
-
             riders = new ArrayList<>();
             riders.addAll(ride.getReservees());
             adapter = new RidersAdapter(this, riders);
             rvRiders.setAdapter(adapter);
             rvRiders.setLayoutManager(new LinearLayoutManager(this));
             adapter.notifyDataSetChanged();
-
             enableSwipeToDeleteAndUndo();
         }
         else {
             rvRiders.setVisibility(View.GONE);
+            createNotificationChannel();
         }
 
         pickupLocation = new MarkerOptions().position(new LatLng(ride.getPickupLat(), ride.getPickupLong())).title("Pickup Location");
@@ -153,20 +157,16 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 if(reserved) {
                     currentUser.removeRide(ride);
                     ride.setSeats(ride.getSeats() + 1);
-
-//                    ride.setPrice();
                     ride.removeReservee(currentUser);
                     btReserve.setText("Reserve");
-
-                    //TODO: refresh the previous cell layout view
                 }
                 else {
                     ride.setSeats(ride.getSeats() - 1);
                     currentUser.addRide(ride);
                     ride.addReservee(currentUser);
                     btReserve.setText("Reserved!");
+                    scheduleNotification();
                 }
-
                 currentUser.saveInBackground();
                 ride.saveInBackground();
             }
@@ -178,7 +178,7 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 createProfileDetailDialog();
             }
         });
-
+        tvDepartureTime.setText(ride.getDepartureTime());
         tvDepartureDate.setText(ride.getFullDate());
         tvPickupAddress.setText(ride.getPickupAddress());
         tvDestinationAddress.setText(ride.getDestinationAddress());
@@ -192,14 +192,75 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         float totalPrice = Float.valueOf(ride.getPrice().substring(1).replace(",",""))/reservedRides;
-
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String totalProfitDollar = formatter.format(totalPrice);
-
         tvPrice.setText(totalProfitDollar);
 
         Glide.with(this).load(driver.getProfileImage().getUrl()).into(ibDriverProfileDetail);
         Glide.with(this).load(driver.getCarImage().getUrl()).into(ibDriverCarDetail);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void scheduleNotification() {
+        Intent intent = new Intent(getApplicationContext(), Notification.class);
+        String title = "Ride";
+        String message = "Ride quickly approaching";
+        intent.putExtra(notification.titleExtra, title);
+        intent.putExtra(notification.messageExtra, message);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                notification.notificationID,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Long time = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            time = geTime();
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                time,
+                pendingIntent
+        );
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Long geTime() {
+        String monthAndYear = ride.getDepartureDate();
+        String monthString = monthAndYear.substring(0,3);
+        int day = Integer.valueOf(monthAndYear.substring(monthAndYear.indexOf(" ") + 1));
+        DateTimeFormatter parser = DateTimeFormatter.ofPattern("MMM")
+                .withLocale(Locale.ENGLISH);
+        TemporalAccessor accessor = parser.parse(monthString);
+        int month = accessor.get(ChronoField.MONTH_OF_YEAR) - 1;
+        int hour = 0;
+        int minute = 0;
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
+
+        try {
+            Date time = timeFormat.parse(ride.getDepartureTime());
+            hour = time.getHours();
+            minute = time.getMinutes();
+
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2022,month,day,hour,minute);
+        return calendar.getTimeInMillis();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        String name = "Notif Channel";
+        String desc = "A description of channel";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(notification.channelID, name, importance);
+        channel.setDescription(desc);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
     }
 
     private void enableSwipeToDeleteAndUndo() {
@@ -211,7 +272,6 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
                 adapter.removeItem(position);
                 rider.removeRide(ride);
                 ride.removeReservee(rider);
-//                rider.removeRide(ride);
 
                 Snackbar snackbar = Snackbar
                         .make(clCoordinateProfileLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
@@ -300,14 +360,12 @@ public class RideDetailActivity extends AppCompatActivity implements OnMapReadyC
         tvMajorPop = profileDetailView.findViewById(R.id.tvMajorPop);
         ivCarPop = profileDetailView.findViewById(R.id.ivCarImagePop);
 
-        tvNamePop.setText(driver.getFullName());
-        tvPhoneNumberPop.setText(driver.getPhoneNumber());
-
         Glide.with(this).load(driver.getProfileImage().getUrl()).into(ivProfilePop);
         Glide.with(this).load(driver.getCarImage().getUrl()).into(ivCarPop);
 
+        tvNamePop.setText(driver.getFullName());
+        tvPhoneNumberPop.setText(driver.getPhoneNumber());
         dialogBuilder.setView(profileDetailView);
-
         dialog = dialogBuilder.create();
         dialog.show();
     }
