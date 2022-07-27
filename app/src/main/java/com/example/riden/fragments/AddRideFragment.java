@@ -57,7 +57,6 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -75,8 +74,8 @@ public class AddRideFragment extends Fragment {
     public static final String TAG = "AddRideFragment";
     private EditText etPickupLocation;
     private EditText etDestination;
-    private ImageButton ibCalendar;
-    private ImageButton ibClock;
+    private EditText etCalendarInput;
+//    private ImageButton ibClock;
     private TextView tvCalendarInput;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -88,7 +87,7 @@ public class AddRideFragment extends Fragment {
     private EditText etGasProfit;
     private EditText etSeatProfit;
     private EditText etMiscProfit;
-    private TextView tvDepartureTime;
+    private EditText etDepartureTime;
     private String photoFileName = "photo.jpg";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private String cityPickup;
@@ -248,14 +247,13 @@ public class AddRideFragment extends Fragment {
         initTimePicker();
         etPickupLocation = view.findViewById(R.id.etPickupLocation);
         etDestination = view.findViewById(R.id.etDestination);
-        ibCalendar = view.findViewById(R.id.ibCalendar);
-        ibClock = view.findViewById(R.id.ibClock);
-        tvDepartureTime = view.findViewById(R.id.tvDepartureTime);
-        tvCalendarInput = view.findViewById(R.id.tvCalendarInput);
+        etCalendarInput = view.findViewById(R.id.etCalendarInput);
+//        ibClock = view.findViewById(R.id.ibClock);
+        etDepartureTime = view.findViewById(R.id.etDepartureTime);
+        tvCalendarInput = view.findViewById(R.id.etCalendarInput);
         btAddRide = view.findViewById(R.id.btAddRide);
         ibUploadCarImage = view.findViewById(R.id.ibUploadCarImage);
         etNumberSeats = view.findViewById(R.id.etNumberSeats);
-        tvCalendarInput.setText(getTodaysDate());
         etGasProfit = view.findViewById(R.id.etGas);
         etSeatProfit = view.findViewById(R.id.etProfitFromSeats);
         etMiscProfit = view.findViewById(R.id.etMiscCosts);
@@ -296,14 +294,16 @@ public class AddRideFragment extends Fragment {
             }
         });
 
-        ibCalendar.setOnClickListener(new View.OnClickListener() {
+        etCalendarInput.setFocusable(false);
+        etCalendarInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 datePickerDialog.show();
             }
         });
 
-        ibClock.setOnClickListener(new View.OnClickListener() {
+        etDepartureTime.setFocusable(false);
+        etDepartureTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timePickerDialog.show();
@@ -380,7 +380,7 @@ public class AddRideFragment extends Fragment {
                 LocalTime time = LocalTime.parse(hourText + minuteText, DateTimeFormatter.ofPattern("HHmm"));
                 String formattedTime = time.format(DateTimeFormatter.ofPattern("hh:mm a"));
                 departureTime = formattedTime;
-                tvDepartureTime.setText(formattedTime);
+                etDepartureTime.setText(formattedTime);
 
                 String miscProfit = etMiscProfit.getText().toString();
                 float addMiscProfit;

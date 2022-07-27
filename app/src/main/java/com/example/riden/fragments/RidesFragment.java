@@ -89,7 +89,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                     adapter.updateMileRadius(miles);
                     //call funciton to filter cells based on the location they searched
                 }
-                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             }
 
             @Override
