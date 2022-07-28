@@ -27,125 +27,230 @@
             android:layout_marginTop="0dp"
             tools:context=".fragments.AddRideFragment">
 
-
-            <EditText
-                android:id="@+id/etDestination"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:ems="10"
-                android:hint="Enter Destination"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="@+id/etPickupLocation"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="@+id/etPickupLocation"
-                app:layout_constraintTop_toBottomOf="@+id/etPickupLocation" />
-
-            <EditText
-                android:id="@+id/etPickupLocation"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:ems="10"
-                android:hint="Pickup Location"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/etPrice"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPickupLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Pickup Location" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/destination_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintEnd_toEndOf="@+id/name_text_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/name_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/name_text_input"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Destination Location" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/calendar_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/destination_text_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/destination_text_input"
+                app:layout_constraintTop_toBottomOf="@id/destination_text_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCalendarInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@android:drawable/ic_menu_my_calendar"
+                    android:hint="Pickup Date"
+                    android:inputType="textPersonName"
+                    android:textAlignment="textStart" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/departure_text_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                app:errorEnabled="true"
+
+                app:layout_constraintEnd_toEndOf="@+id/calendar_text_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/calendar_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/number_seats_input"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDepartureTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/clock_small"
+                    android:hint="Pickup Date"
+                    android:inputType="textPersonName"
+                    android:textAlignment="textStart" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/number_seats_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:ems="10"
-                android:hint="Total Profit"
-                android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:textAlignment="viewStart"
-                app:layout_constraintEnd_toEndOf="@+id/tvDepartureTime"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/ibClock"
-                app:layout_constraintTop_toBottomOf="@+id/etMiscCosts" />
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/calendar_text_input"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="@+id/calendar_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/calendar_text_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNumberSeats"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/car_seat_small"
+                    android:hint="Seats"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/tvCalendarInput"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="28dp"
-                android:text="TextView"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/ibCalendar"
-                app:layout_constraintEnd_toEndOf="@+id/etDestination"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/ibCalendar"
-                app:layout_constraintTop_toTopOf="@+id/ibCalendar" />
-
-            <TextView
-                android:id="@+id/tvDepartureTime"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="28dp"
-                android:text="Departure Time"
-                android:textAlignment="viewStart"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/ibClock"
-                app:layout_constraintEnd_toEndOf="@+id/etDestination"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/ibCalendar"
-                app:layout_constraintTop_toTopOf="@+id/ibClock" />
-
-            <ImageButton
-                android:id="@+id/ibCalendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:contentDescription="idk brah"
-                android:src="@android:drawable/ic_menu_my_calendar"
-                app:layout_constraintStart_toStartOf="@+id/etDestination"
-                app:layout_constraintTop_toBottomOf="@+id/etDestination" />
-
-            <ImageButton
-                android:id="@+id/ibClock"
+                android:id="@+id/priceBreakdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="12dp"
-                android:contentDescription="idk brah"
-                android:src="@android:drawable/ic_menu_my_calendar"
-                app:layout_constraintStart_toStartOf="@+id/etDestination"
-                app:layout_constraintTop_toBottomOf="@+id/etNumberSeats" />
+                android:layout_marginTop="28dp"
+                android:text="Price Breakdown"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/departure_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/departure_text_input" />
 
-            <EditText
-                android:id="@+id/etNumberSeats"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/gas_profit_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:ems="10"
-                android:hint="Number of seats"
-                android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="@+id/tvCalendarInput"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/departure_text_input"
                 app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="@+id/ibCalendar"
-                app:layout_constraintTop_toBottomOf="@+id/ibCalendar" />
+                app:layout_constraintStart_toStartOf="@+id/departure_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/priceBreakdown">
 
-            <Button
-                android:id="@+id/btAddRide"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etGas"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/gas_small"
+                    android:hint="Gas Cost"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/seat_profit_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="60dp"
-                android:text="ADD RIDE"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/etNumberSeats"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/etNumberSeats"
-                app:layout_constraintTop_toBottomOf="@+id/ibUploadCarImage" />
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/gas_profit_input"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="@+id/gas_profit_input"
+                app:layout_constraintTop_toBottomOf="@+id/gas_profit_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etProfitFromSeats"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/car_seat_small"
+                    android:hint="Profit From Seats"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/misc_profit_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/seat_profit_input"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="@+id/seat_profit_input"
+                app:layout_constraintTop_toBottomOf="@+id/seat_profit_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMiscCosts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/misc_small"
+                    android:hint="Miscelaneous Costs"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/total_profit_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/misc_profit_input"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="@+id/misc_profit_input"
+                app:layout_constraintTop_toBottomOf="@+id/misc_profit_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/money_small"
+                    android:hint="Total Profit"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <ImageButton
                 android:id="@+id/ibUploadCarImage"
@@ -157,93 +262,24 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etPrice"
+                app:layout_constraintTop_toBottomOf="@+id/total_profit_input"
                 tools:src="@android:drawable/ic_menu_upload_you_tube" />
 
-            <EditText
-                android:id="@+id/etGas"
+            <Button
+                android:id="@+id/btAddRide"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:ems="10"
-                android:hint="Gas"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/ivGasProfit"
-                app:layout_constraintEnd_toEndOf="@+id/tvDepartureTime"
-                app:layout_constraintStart_toEndOf="@+id/ivGasProfit"
-                app:layout_constraintTop_toTopOf="@+id/ivGasProfit" />
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="60dp"
+                android:text="ADD RIDE"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/number_seats_input"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/number_seats_input"
+                app:layout_constraintTop_toBottomOf="@+id/ibUploadCarImage" />
 
-            <EditText
-                android:id="@+id/etMiscCosts"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:ems="10"
-                android:hint="Miscellaneous Costs"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/ivMiscProfit"
-                app:layout_constraintEnd_toEndOf="@+id/etProfitFromSeats"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/ivMiscProfit"
-                app:layout_constraintTop_toTopOf="@+id/ivMiscProfit"
-                app:layout_constraintVertical_bias="1.0" />
 
-            <EditText
-                android:id="@+id/etProfitFromSeats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:ems="10"
-                android:hint="Profit From Seats"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/ivSeatProfit"
-                app:layout_constraintEnd_toEndOf="@+id/etGas"
-                app:layout_constraintStart_toEndOf="@+id/ivSeatProfit"
-                app:layout_constraintTop_toTopOf="@+id/ivSeatProfit" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="Price Breakdown"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/ibClock"
-                app:layout_constraintTop_toBottomOf="@+id/tvDepartureTime" />
-
-            <ImageView
-                android:id="@+id/ivSeatProfit"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="#673AB7"
-                app:layout_constraintStart_toStartOf="@+id/ivGasProfit"
-                app:layout_constraintTop_toBottomOf="@+id/ivGasProfit"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/ivGasProfit"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="#631D1D"
-                app:layout_constraintStart_toStartOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/ivMiscProfit"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="12dp"
-                android:background="#2196F3"
-                app:layout_constraintStart_toStartOf="@+id/ivSeatProfit"
-                app:layout_constraintTop_toBottomOf="@+id/ivSeatProfit"
-                tools:src="@tools:sample/avatars" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

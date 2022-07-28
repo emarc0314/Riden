@@ -27,6 +27,7 @@ import com.example.riden.R;
 import com.example.riden.activities.helpers.Spelling;
 import com.example.riden.activities.helpers.Trie;
 import com.example.riden.models.Ride;
+import com.example.riden.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -45,7 +46,7 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
     private SearchView searchView;
     public static final String TAG = "RidesFragment";
     private Spinner spMiles;
-
+    private User user = (User) User.getCurrentUser();
     public RidesFragment() {
         // Required empty public constructor
     }
@@ -53,6 +54,15 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
     private void fetchTimelineAsync(int i) {
         //TODO: Implement when SwipeRefreshing
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.clear();
+        queryRides();
+//        rides.
+//        rides.addAll(user.getMyRides());
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -79,7 +89,6 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                     adapter.updateMileRadius(miles);
                     //call funciton to filter cells based on the location they searched
                 }
-                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -97,15 +106,18 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onQueryTextChange(String newText) {
-                String autoCorrect = getAutoCorrect(newText);
-                adapter.getFilter().filter(autoCorrect);
+                if(newText != null || newText != "") {
+                    String autoCorrect = getAutoCorrect(newText);
+                    adapter.getFilter().filter(autoCorrect);
+                }
+
                 return false;
             }
         });
 
         rvRides.setAdapter(adapter);
         rvRides.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryRides();
+//        queryRides();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -125,14 +137,11 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
         return input;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void queryRides() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+//        query.whereEqualTo("asd", true);
+        user.getRideObjectIds();
         query.setLimit(20);
         query.addAscendingOrder("numberSeats");
         query.findInBackground(new FindCallback<Ride>() {
@@ -147,7 +156,7 @@ public class RidesFragment extends Fragment implements AdapterView.OnItemSelecte
                     Log.i(TAG, "ride " + ride.getDriver());
                 }
                 for(Ride ride: theseRides) {
-                    if(ride.getSeats() > 0) {
+                    if(ride.getSeats() > 0 && !user.getRideObjectIds().contains(ride.getObjectId())) {
                         rides.add(ride);
                         allRides.add(ride);
                         ridesTrie.insert(ride);

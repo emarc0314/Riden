@@ -72,7 +72,7 @@ final public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.Vi
             tvTime = itemView.findViewById(R.id.tvTime);
             tvSeats = itemView.findViewById(R.id.tvSeatsReserved);
             ibCarImage = itemView.findViewById(R.id.ibProfileImageRider);
-            ibReserve = itemView.findViewById(R.id.ibReserve);
+//            ibReserve = itemView.findViewById(R.id.ibReserve);
 
             itemView.setOnClickListener(this);
         }

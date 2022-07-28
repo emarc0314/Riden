@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvItemView"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    android:background="#D6D1D1">
+    android:layout_height="90dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -22,7 +21,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="369dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/cellColor">
 
             <TextView
                 android:id="@+id/tvNameRider"

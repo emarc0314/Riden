@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toolbar;
 
 import com.example.riden.Adapters.MyRidesAdapter;
 import com.example.riden.R;
@@ -33,6 +34,7 @@ public class MyRidesFragment extends Fragment {
     private RecyclerView rvRides;
     protected List<Ride> rides;
     protected MyRidesAdapter adapter;
+    private Toolbar toolbar;
 
     User user = (User) User.getCurrentUser();
 
@@ -50,6 +52,8 @@ public class MyRidesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         rvRides = view.findViewById(R.id.rvReservedRides);
         rides = new ArrayList<>();
         adapter = new MyRidesAdapter(getContext(), rides);
@@ -58,7 +62,14 @@ public class MyRidesFragment extends Fragment {
         rides.addAll(user.getMyRides());
         adapter.notifyDataSetChanged();
 
+        toolbar = view.findViewById(R.id.toolbar);
+//        toolbar.setTitle("Title");
 
+//        toolbar.sett
+
+//        view.findViewById(res.v)
+//        view.getacti
+//        getActionBar();
     }
 
     @Override
