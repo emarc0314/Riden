@@ -20,7 +20,6 @@ public class Ride extends ParseObject {
     private static final String CITY_DESTINATION_KEY = "cityDestination";
     private static final String STATE_DESTINATION_KEY = "stateDestination";
     private static final String DEPARTURE_DATE_KEY = "departureDate";
-
     private static final String PICKUP_ADDRESS_KEY = "pickupAddress";
     private static final String DESTINATION_ADDRESS_KEY = "destinationAddress";
     private static final String PICKUP_LAT_KEY = "pickupLat";
@@ -30,6 +29,7 @@ public class Ride extends ParseObject {
     private static final String FULL_DATE_KEY = "fullDate";
     private static final String USERS_RESERVED_KEY = "usersReserved";
     private static final String ESTIMATED_PRICE_KEY = "estimatedPrice";
+    private static final String DEPARTURE_TIME_KEY = "departureTime";
 
     public void setPrice(String price) {
         put(ESTIMATED_PRICE_KEY, price);
@@ -103,10 +103,6 @@ public class Ride extends ParseObject {
     public List<User> getReservees() {
         List<User> reservees = getList(USERS_RESERVED_KEY);
         ArrayList<String> usernames = new ArrayList<>();
-//
-//        for (User reservee: reservees) {
-//            reservee.getUsername();
-//        }
         return reservees;
     }
 
@@ -200,6 +196,14 @@ public class Ride extends ParseObject {
 
     public String getDepartureDate() {
         return getString(DEPARTURE_DATE_KEY);
+    }
+
+    public void setDepartureTime(String departureTime) {
+        put(DEPARTURE_TIME_KEY, departureTime);
+    }
+
+    public String getDepartureTime() {
+        return getString(DEPARTURE_TIME_KEY);
     }
 
 }
